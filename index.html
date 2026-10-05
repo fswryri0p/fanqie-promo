@@ -3,37 +3,37 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="dark" />
+<meta name="color-scheme" content="light" />
 <title>番茄大王 · 一个链接，存下全网视频</title>
 <meta name="description" content="番茄大王 —— Android 端视频下载与去水印工具。21 个平台、4K 原画、8 路并行分片、音视频无损合成，解析完全在本地完成。" />
-<meta name="theme-color" content="#0B0A1A" />
+<meta name="theme-color" content="#EFEFF2" />
 <script>document.documentElement.classList.add('js')</script>
 <style>
 /* ==================================================================
-   番茄大王 · 极光渐变 · 磨砂玻璃
+   番茄大王 · Bento 拼贴网格
+   所有内容压进一个自适应网格，不做逐屏叙事
    ================================================================== */
 :root{
-  --bg:#0B0A1A;
-  --ink:#FFFFFF;
-  --dim:rgba(255,255,255,.72);
-  --dim2:rgba(255,255,255,.48);
-  --red:#FF4B3E;
-  --magenta:#FF3D8B;
-  --violet:#8A5CFF;
-  --amber:#FFA23D;
-  --glass:rgba(255,255,255,.055);
-  --glass-2:rgba(255,255,255,.09);
-  --stroke:rgba(255,255,255,.14);
-  --stroke-2:rgba(255,255,255,.08);
+  --page:#EFEFF2;
+  --tile:#FFFFFF;
+  --ink:#0E0E11;
+  --ink-2:#2C2C33;
+  --muted:#71717A;
+  --red:#FF3B2F;
+  --red-2:#D92A1E;
+  --lime:#C8F169;
+  --violet:#7C5CFF;
+  --line:rgba(14,14,17,.09);
 
   --sans:-apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC",
          "MiSans", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei",
          system-ui, "Segoe UI", Roboto, sans-serif;
   --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --pad:clamp(18px,5vw,56px);
-  --maxw:1160px;
-  --nav:64px;
+  --pad:clamp(14px,3.6vw,44px);
+  --gap:clamp(10px,1.4vw,16px);
+  --r:26px;
+  --maxw:1240px;
   --ease:cubic-bezier(.19,1,.22,1);
 
   --st:env(safe-area-inset-top,0px);
@@ -43,336 +43,268 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;
-  scroll-padding-top:calc(var(--nav) + var(--st) + 20px)}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);
-  line-height:1.6;overflow-x:hidden;
+body{background:var(--page);color:var(--ink);font-family:var(--sans);
+  line-height:1.5;letter-spacing:-.012em;overflow-x:hidden;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   -webkit-tap-highlight-color:transparent}
 img{display:block;max-width:100%;-webkit-user-drag:none}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--red);color:#fff}
-:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:12px}
-h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.03em;line-height:1.12}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:12px}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.035em;line-height:1.08}
 p{margin:0}
-section[id]{scroll-margin-top:calc(var(--nav) + var(--st) + 20px)}
 
-/* ---------------- 极光背景 ---------------- */
-.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.aurora i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;
-  animation:drift 22s ease-in-out infinite alternate}
-.aurora i:nth-child(1){width:min(620px,92vw);height:min(620px,92vw);top:-16%;left:-16%;
-  background:radial-gradient(circle,var(--red),transparent 68%)}
-.aurora i:nth-child(2){width:min(560px,86vw);height:min(560px,86vw);top:22%;right:-20%;
-  background:radial-gradient(circle,var(--violet),transparent 68%);animation-delay:-6s}
-.aurora i:nth-child(3){width:min(520px,84vw);height:min(520px,84vw);bottom:-18%;left:14%;
-  background:radial-gradient(circle,var(--magenta),transparent 70%);animation-delay:-12s}
-@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(4%,-3%,0) scale(1.12)}}
-@media (max-width:900px){ .aurora i{filter:blur(64px);opacity:.45} }
-.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E")}
-.page{position:relative;z-index:2}
-
-.wrap{max-width:var(--maxw);margin:0 auto;
-  padding-left:max(var(--pad),var(--sl));padding-right:max(var(--pad),var(--sr))}
-
-/* ---------------- 玻璃卡 ---------------- */
-.glass{background:var(--glass);border:1px solid var(--stroke);
-  backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
-  border-radius:26px;box-shadow:0 24px 60px -34px rgba(0,0,0,.9),
-    inset 0 1px 0 rgba(255,255,255,.10)}
+/* ---------------- 顶栏（极简，一条） ---------------- */
+.top{position:sticky;top:0;z-index:60;
+  padding:calc(10px + var(--st)) max(var(--pad),var(--sr)) 10px max(var(--pad),var(--sl));
+  background:rgba(239,239,242,.78);
+  backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%)}
+.top-in{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:9px;min-width:0}
+.brand .mark{width:30px;height:30px;border-radius:9px;flex:0 0 auto}
+.brand b{font-size:16.5px;font-weight:800;letter-spacing:-.035em;white-space:nowrap}
+.top-meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+@media (max-width:700px){ .top-meta{display:none} }
 
 /* ---------------- 按钮 ---------------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  min-height:52px;padding:15px 30px;border-radius:999px;border:1px solid transparent;
-  cursor:pointer;font-size:16px;font-weight:700;line-height:1;white-space:nowrap;
-  transition:transform .24s var(--ease), box-shadow .24s var(--ease), background .24s, border-color .24s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:50px;padding:14px 26px;border-radius:999px;border:1px solid transparent;
+  font-size:15.5px;font-weight:700;line-height:1;white-space:nowrap;cursor:pointer;
+  transition:transform .22s var(--ease), background .22s, color .22s, border-color .22s, box-shadow .22s}
 .btn svg{width:17px;height:17px;flex:0 0 auto}
-.btn-grad{background:linear-gradient(96deg,var(--red),var(--magenta) 52%,var(--violet));
-  color:#fff;box-shadow:0 14px 34px -12px rgba(255,61,139,.75)}
-.btn-ghost{background:var(--glass-2);border-color:var(--stroke);color:#fff;
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.btn-sm{min-height:40px;padding:10px 20px;font-size:14px}
-.btn:active{transform:translateY(1px) scale(.99)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-red{background:var(--red);color:#fff}
+.btn-line{border-color:var(--line);background:#fff;color:var(--ink)}
+.btn-sm{min-height:40px;padding:10px 18px;font-size:14px}
+.btn:active{transform:scale(.985)}
 @media (hover:hover){
-  .btn-grad:hover{transform:translateY(-2px);box-shadow:0 22px 44px -14px rgba(255,61,139,.9)}
-  .btn-ghost:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.26)}
+  .btn-dark:hover{background:#000;transform:translateY(-2px)}
+  .btn-red:hover{background:var(--red-2);transform:translateY(-2px)}
+  .btn-line:hover{border-color:rgba(14,14,17,.28);transform:translateY(-2px)}
 }
 
-/* ---------------- 导航 ---------------- */
-.nav{position:fixed;top:0;left:0;right:0;z-index:80;min-height:var(--nav);
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:calc(10px + var(--st)) max(var(--pad),var(--sr)) 10px max(var(--pad),var(--sl));
-  transition:background .35s, border-color .35s, backdrop-filter .35s;border-bottom:1px solid transparent}
-.nav.solid{background:rgba(11,10,26,.72);
-  backdrop-filter:blur(22px) saturate(170%);-webkit-backdrop-filter:blur(22px) saturate(170%);
-  border-bottom-color:var(--stroke-2)}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-.brand .mark{width:32px;height:32px;border-radius:10px;flex:0 0 auto;
-  box-shadow:0 8px 22px -8px rgba(255,75,62,.9)}
-.brand b{font-size:17.5px;font-weight:800;letter-spacing:-.035em;white-space:nowrap}
-.nav-links{display:flex;gap:26px;font-size:14px;color:var(--dim)}
-@media (hover:hover){ .nav-links a:hover{color:#fff} }
-@media (max-width:940px){ .nav-links{display:none} }
-@media (max-width:430px){ .brand b{font-size:16px} .nav .btn{padding:9px 15px;font-size:13px;min-height:38px} }
+/* ==================================================================
+   Bento 网格
+   ================================================================== */
+.bento{max-width:var(--maxw);margin:0 auto;
+  padding:var(--gap) max(var(--pad),var(--sr)) calc(var(--gap) + var(--sb)) max(var(--pad),var(--sl));
+  display:grid;gap:var(--gap);
+  grid-template-columns:repeat(1,minmax(0,1fr));
+  grid-auto-flow:dense}
+@media (min-width:720px){ .bento{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (min-width:1020px){ .bento{grid-template-columns:repeat(4,minmax(0,1fr))} }
 
-/* ---------------- 首屏 ---------------- */
-.hero{padding-top:calc(var(--nav) + var(--st) + clamp(30px,6vh,68px));
-  padding-bottom:clamp(40px,6vh,80px);text-align:center}
-.badge{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;
-  background:var(--glass-2);border:1px solid var(--stroke);font-size:13px;font-weight:600;color:var(--dim);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.badge i{width:7px;height:7px;border-radius:50%;background:#43E07A;box-shadow:0 0 0 4px rgba(67,224,122,.18)}
-h1.hero-t{margin-top:22px;font-size:clamp(40px,12.6vw,92px);letter-spacing:-.05em;line-height:1.04}
-@media (min-width:900px){ h1.hero-t{font-size:clamp(58px,7vw,92px)} }
-.grad-text{background:linear-gradient(96deg,var(--red),var(--magenta) 46%,var(--violet));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-p{margin:22px auto 0;max-width:32ch;color:var(--dim);font-size:clamp(15.5px,1.8vw,19px)}
-.hero-cta{margin-top:30px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.hero-art{position:relative;margin:clamp(38px,6vh,70px) auto 0;max-width:840px}
-.hero-art .glow{position:absolute;inset:6% 10%;border-radius:50%;filter:blur(70px);z-index:0;
-  background:radial-gradient(circle,rgba(255,61,139,.42),transparent 68%)}
-.hero-art img{position:relative;z-index:1;width:100%;height:auto;aspect-ratio:16/10;object-fit:contain}
-.hero-stats{margin-top:clamp(26px,4vh,40px);display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.chip{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;
-  background:var(--glass);border:1px solid var(--stroke-2);font-size:13.5px;font-weight:600;color:var(--dim);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.chip b{color:#fff;font-weight:800}
+.tile{position:relative;overflow:hidden;border-radius:var(--r);
+  background:var(--tile);border:1px solid var(--line);
+  display:flex;flex-direction:column;
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease)}
+@media (hover:hover){ .tile:hover{transform:translateY(-3px);box-shadow:0 22px 44px -28px rgba(14,14,17,.35)} }
+.tile .pad{padding:clamp(20px,2.4vw,30px);display:flex;flex-direction:column;height:100%}
 
-/* ---------------- 区块 ---------------- */
-.sec{padding:clamp(56px,9vh,110px) 0}
-.sec-head{text-align:center;max-width:640px;margin:0 auto}
-.kicker{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-  background:linear-gradient(96deg,var(--red),var(--magenta));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.sec h2{margin-top:14px;font-size:clamp(28px,6.4vw,52px)}
-.sec .lead{margin-top:16px;color:var(--dim);font-size:clamp(15px,1.7vw,17.5px)}
+/* 展开规则 */
+@media (min-width:720px){
+  .t-hero{grid-column:span 2}
+  .t-wide{grid-column:span 2}
+}
+@media (min-width:1020px){
+  .t-hero{grid-column:span 2;grid-row:span 2}
+  .t-wide{grid-column:span 2}
+  .t-full{grid-column:span 4}
+  .t-tall{grid-row:span 2}
+}
 
-.grid-3{margin-top:clamp(30px,5vw,50px);display:grid;gap:16px}
-@media (min-width:760px){ .grid-3{grid-template-columns:repeat(3,1fr)} }
-.grid-2{margin-top:clamp(30px,5vw,50px);display:grid;gap:16px}
-@media (min-width:760px){ .grid-2{grid-template-columns:repeat(2,1fr)} }
-.cell{padding:28px 24px}
-.cell .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
-  background:linear-gradient(140deg,rgba(255,75,62,.28),rgba(138,92,255,.28));
-  border:1px solid var(--stroke);font-family:var(--mono);font-size:14px;font-weight:800;color:#fff}
-.cell b{display:block;margin-top:18px;font-size:18px;font-weight:800;letter-spacing:-.025em}
-.cell p{margin-top:8px;color:var(--dim);font-size:14.5px}
+/* ---------------- 主瓦片 ---------------- */
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.t-hero h1{margin-top:14px;font-size:clamp(34px,9.4vw,58px);letter-spacing:-.045em;line-height:1.02}
+@media (min-width:1020px){ .t-hero h1{font-size:clamp(40px,3.6vw,58px)} }
+.t-hero .lede{margin-top:16px;color:var(--muted);font-size:clamp(14.5px,1.6vw,16.5px);max-width:34ch}
+.t-hero .acts{margin-top:auto;padding-top:24px;display:flex;gap:10px;flex-wrap:wrap}
+.hero-figure{margin-top:22px;border-radius:18px;overflow:hidden;background:#F6F6F8}
+.hero-figure img{width:100%;height:auto;aspect-ratio:16/10;object-fit:contain}
 
-/* ---------------- 平台 ---------------- */
-.marquee{margin-top:clamp(30px,5vw,48px);overflow:hidden;
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
-  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.track{display:flex;gap:12px;width:max-content;animation:slide 44s linear infinite}
-@keyframes slide{to{transform:translateX(-50%)}}
-@media (hover:hover){ .marquee:hover .track{animation-play-state:paused} }
-.p-tag{display:flex;align-items:center;gap:9px;padding:12px 20px;border-radius:999px;white-space:nowrap;
-  background:var(--glass);border:1px solid var(--stroke-2);font-size:14.5px;font-weight:600;color:var(--dim);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.p-tag i{width:6px;height:6px;border-radius:50%;background:linear-gradient(140deg,var(--red),var(--magenta));flex:0 0 auto}
+/* ---------------- 数据瓦片 ---------------- */
+.t-stat .pad{justify-content:space-between;gap:16px;min-height:150px}
+.t-stat .v{font-family:var(--mono);font-size:clamp(34px,7.4vw,46px);font-weight:700;
+  line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.t-stat .v em{font-style:normal;font-size:.4em;color:var(--red);margin-left:3px}
+.t-stat .k{font-size:14.5px;font-weight:700}
+.t-stat .d{margin-top:3px;font-size:12.5px;color:var(--muted)}
+.t-stat.ink{background:var(--ink);border-color:transparent;color:#fff}
+.t-stat.ink .v em{color:var(--lime)}
+.t-stat.ink .d{color:rgba(255,255,255,.55)}
+.t-stat.red{background:var(--red);border-color:transparent;color:#fff}
+.t-stat.red .v em{color:#FFE08A}
+.t-stat.red .d{color:rgba(255,255,255,.7)}
 
-/* ---------------- 去水印 ---------------- */
-.wm{margin-top:clamp(30px,5vw,50px);display:grid;gap:16px}
-@media (min-width:900px){ .wm{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center} }
-.ba{position:relative;width:100%;max-width:370px;margin:0 auto;aspect-ratio:3/4;
-  border-radius:22px;overflow:hidden;background:#111;
+/* ---------------- 去水印瓦片 ---------------- */
+.t-wm .head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.t-wm h2{font-size:clamp(22px,3.2vw,30px)}
+.t-wm .note{font-size:13px;color:var(--muted)}
+.wm-body{margin-top:20px;display:grid;gap:18px;align-items:center}
+@media (min-width:640px){ .wm-body{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)} }
+.ba{position:relative;width:100%;max-width:300px;margin:0 auto;aspect-ratio:3/4;
+  border-radius:18px;overflow:hidden;background:#111;
   touch-action:pan-y;-webkit-user-select:none;user-select:none;
-  -webkit-touch-callout:none;cursor:ew-resize;--pos:58%;
-  box-shadow:0 40px 80px -36px rgba(0,0,0,.95), 0 0 0 1px var(--stroke)}
+  -webkit-touch-callout:none;cursor:ew-resize;--pos:58%}
 .ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .ba-layer{position:absolute;inset:0}
 .ba-before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
-.ba-wm{position:absolute;right:10%;bottom:14%;padding:7px 13px;border-radius:10px;
-  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.24);color:#fff;font-size:12.5px;font-weight:600}
-.ba-tag{position:absolute;top:14px;padding:6px 14px;border-radius:999px;font-size:11.5px;font-weight:800;
-  letter-spacing:.04em}
-.ba-tag.l{left:14px;background:rgba(255,255,255,.94);color:#111}
-.ba-tag.r{right:14px;background:linear-gradient(96deg,var(--red),var(--magenta));color:#fff}
+.ba-wm{position:absolute;right:10%;bottom:14%;padding:6px 12px;border-radius:9px;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.22);color:#fff;
+  font-size:12px;font-weight:600}
+.ba-tag{position:absolute;top:12px;padding:5px 12px;border-radius:999px;
+  font-size:11px;font-weight:800}
+.ba-tag.l{left:12px;background:rgba(255,255,255,.94);color:var(--ink)}
+.ba-tag.r{right:12px;background:var(--red);color:#fff}
 .ba-hd{position:absolute;top:0;bottom:0;left:var(--pos);width:2.5px;transform:translateX(-1px);
-  background:#fff;box-shadow:0 0 14px rgba(255,255,255,.6)}
-.ba-hd::after{content:"";position:absolute;top:50%;left:50%;width:54px;height:54px;
-  transform:translate(-50%,-50%);border-radius:50%;background:#fff;box-shadow:0 8px 26px rgba(0,0,0,.5);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3E%3Cpath d='M22 19l-5 8 5 8M32 19l5 8-5 8' stroke='%23FF3D8B' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background:#fff;box-shadow:0 0 12px rgba(0,0,0,.45)}
+.ba-hd::after{content:"";position:absolute;top:50%;left:50%;width:50px;height:50px;
+  transform:translate(-50%,-50%);border-radius:50%;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.35);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M20 17l-5 8 5 8M30 17l5 8-5 8' stroke='%23FF3B2F' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:center}
-.wm-list{padding:26px 24px}
-.wm-list .row{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--stroke-2)}
-.wm-list .row:first-child{padding-top:0}
-.wm-list .row:last-child{border-bottom:0;padding-bottom:0}
-.wm-list .n{flex:0 0 32px;height:32px;border-radius:10px;display:grid;place-items:center;
-  background:linear-gradient(140deg,rgba(255,75,62,.3),rgba(138,92,255,.3));
-  border:1px solid var(--stroke);font-family:var(--mono);font-size:12.5px;font-weight:800}
-.wm-list b{display:block;font-size:16.5px;font-weight:800;margin-bottom:5px}
-.wm-list p{color:var(--dim);font-size:14.5px}
+.wm-points{display:grid;gap:14px}
+.wm-points div{display:flex;gap:12px}
+.wm-points .n{flex:0 0 26px;height:26px;border-radius:9px;background:#F0F0F3;
+  display:grid;place-items:center;font-family:var(--mono);font-size:11.5px;font-weight:800;color:var(--red-2)}
+.wm-points b{display:block;font-size:15px;font-weight:800}
+.wm-points p{font-size:13.5px;color:var(--muted);margin-top:2px}
 
-/* ---------------- 数字 ---------------- */
-.nums{margin-top:clamp(30px,5vw,50px);display:grid;gap:16px;grid-template-columns:repeat(2,1fr)}
-@media (min-width:820px){ .nums{grid-template-columns:repeat(4,1fr)} }
-.nums .cell{text-align:center;padding:30px 18px}
-.nums .v{font-size:clamp(34px,8vw,54px);font-weight:800;line-height:1;letter-spacing:-.05em;
-  font-variant-numeric:tabular-nums;
-  background:linear-gradient(180deg,#fff,rgba(255,255,255,.62));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.nums .v em{font-style:normal;font-size:.38em;letter-spacing:-.02em;
-  background:linear-gradient(96deg,var(--red),var(--magenta));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.nums .k{margin-top:12px;font-size:16px;font-weight:800}
-.nums .d{margin-top:5px;font-size:13.5px;color:var(--dim2)}
+/* ---------------- 平台瓦片 ---------------- */
+.t-plat .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+.t-plat .tag{padding:9px 15px;border-radius:999px;background:#F4F4F6;
+  font-size:13.5px;font-weight:700;color:var(--ink-2)}
+.t-plat .tag.more{background:var(--red);color:#fff}
 
-/* ---------------- 结尾 ---------------- */
-.cta{margin-top:clamp(20px,4vh,44px);position:relative;overflow:hidden;text-align:center;
-  padding:clamp(48px,8vh,88px) clamp(22px,5vw,56px)}
-.cta::before{content:"";position:absolute;inset:-40% -20%;z-index:0;
-  background:radial-gradient(circle at 50% 40%, rgba(255,61,139,.30), transparent 62%)}
-.cta-in{position:relative;z-index:1}
-.cta h2{font-size:clamp(30px,7.6vw,62px);letter-spacing:-.045em;line-height:1.06;max-width:15em;margin:0 auto}
-.cta p{margin-top:16px;color:var(--dim);font-size:clamp(14.5px,1.6vw,17px)}
-.cta-row{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.filename{margin-top:20px;font-family:var(--mono);font-size:12px;color:var(--dim2)}
+/* ---------------- 隐私瓦片 ---------------- */
+.t-priv{background:var(--ink);border-color:transparent;color:#fff}
+.t-priv h2{font-size:clamp(22px,3.2vw,30px)}
+.t-priv .lead{margin-top:12px;color:rgba(255,255,255,.62);font-size:14.5px}
+.t-priv .steps{margin-top:auto;padding-top:22px;display:grid;gap:10px}
+@media (min-width:520px){ .t-priv .steps{grid-template-columns:repeat(3,1fr);gap:14px} }
+.t-priv .step{border-top:1px solid rgba(255,255,255,.16);padding-top:12px}
+.t-priv .step .d{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--lime)}
+.t-priv .step b{display:block;margin-top:7px;font-size:15px;font-weight:800}
+.t-priv .step p{font-size:13px;color:rgba(255,255,255,.55);margin-top:2px}
+
+/* ---------------- 结尾瓦片 ---------------- */
+.t-cta{background:linear-gradient(118deg,var(--red),#FF6B3D 58%,#FF9A3D);
+  border-color:transparent;color:#fff}
+.t-cta .pad{flex-direction:row;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap}
+.t-cta h2{font-size:clamp(22px,3.4vw,34px);letter-spacing:-.04em;max-width:18em}
+.t-cta .meta{margin-top:8px;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.78)}
+.t-cta .acts{display:flex;gap:10px;flex-wrap:wrap}
+.t-cta .btn{background:#fff;color:var(--red-2)}
+@media (hover:hover){ .t-cta .btn:hover{transform:translateY(-2px)} }
 
 /* ---------------- 页脚 ---------------- */
-.ft{border-top:1px solid var(--stroke-2);margin-top:clamp(30px,5vh,60px);
-  padding:30px max(var(--pad),var(--sr)) calc(30px + var(--sb)) max(var(--pad),var(--sl))}
-.ft-in{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;
-  justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--dim2)}
-.ft .brand b{font-size:15px;color:#fff}
+.ft{max-width:var(--maxw);margin:0 auto;
+  padding:6px max(var(--pad),var(--sr)) calc(30px + var(--sb)) max(var(--pad),var(--sl));
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.03em}
 
-/* ---------------- 常驻下载条 ---------------- */
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:75;display:none;
+/* ---------------- 底部常驻下载条 ---------------- */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;
   padding:10px max(var(--pad),var(--sr)) calc(10px + var(--sb)) max(var(--pad),var(--sl));
-  background:rgba(11,10,26,.82);
-  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1px solid var(--stroke-2);
+  background:rgba(239,239,242,.9);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:1px solid var(--line);
   transform:translateY(130%);transition:transform .45s var(--ease)}
 .dock.show{transform:none}
 .dock .btn{width:100%}
-.dock .btn span{font-weight:500;font-size:13px;opacity:.85}
-@media (max-width:940px){ .dock{display:block} body.docked .ft{padding-bottom:90px} }
+@media (max-width:900px){ .dock{display:block} body.docked .ft{padding-bottom:80px} }
 
 /* ---------------- 动效 ---------------- */
-.js .rise{opacity:0;transform:translateY(22px);animation:rise .9s var(--ease) forwards}
-@keyframes rise{to{opacity:1;transform:none}}
-.d1{animation-delay:.07s}.d2{animation-delay:.17s}.d3{animation-delay:.27s}.d4{animation-delay:.37s}
-.js .rv{opacity:0;transform:translateY(28px);transition:opacity .85s var(--ease), transform .85s var(--ease)}
-.js .rv.in{opacity:1;transform:none}
-.rv.d-1{transition-delay:.08s}.rv.d-2{transition-delay:.16s}.rv.d-3{transition-delay:.24s}
+.js .tile{opacity:0;transform:translateY(18px) scale(.985);
+  transition:opacity .7s var(--ease), transform .7s var(--ease), box-shadow .3s var(--ease)}
+.js .tile.in{opacity:1;transform:none}
 
 @media (prefers-reduced-motion:reduce){
-  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
   html{scroll-behavior:auto}
-  .js .rv,.js .rise{opacity:1;transform:none}
-  .track{animation:none}
-  .aurora i{animation:none}
+  .js .tile{opacity:1;transform:none}
 }
 </style>
 </head>
 <body>
 
-<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
-<div class="grain" aria-hidden="true"></div>
-
-<div class="page">
-
-<header class="nav" id="nav">
-  <a class="brand" href="#top" aria-label="番茄大王">
-    <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
-      <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#FF4B3E"/><stop offset="1" stop-color="#FF3D8B"/></linearGradient></defs>
-      <rect width="48" height="48" rx="14" fill="url(#g1)"/>
-      <circle cx="24" cy="29" r="13" fill="#fff"/>
-      <path d="M24 15c-1.9-2.9-5-4.3-7.7-4 .6 2.7 2.4 5 5.1 6-1.1-.2-2.3-.2-3.4 0 1.6 1.9 3.9 2.9 6 2.6 2.1.3 4.4-.7 6-2.6-1.1-.2-2.3-.2-3.4 0 2.7-1 4.5-3.3 5.1-6-2.7-.3-5.8 1.1-7.7 4z" fill="#3FA05A"/>
-    </svg>
-    <b>番茄大王</b>
-  </a>
-  <nav class="nav-links">
-    <a href="#features">功能</a>
-    <a href="#platforms">平台</a>
-    <a href="#watermark">去水印</a>
-    <a href="#speed">速度</a>
-    <a href="#privacy">隐私</a>
-  </nav>
-  <a class="btn btn-grad btn-sm" href="#download">下载 APK</a>
-</header>
-
-<!-- ============ 首屏 ============ -->
-<section class="hero" id="top">
-  <div class="wrap">
-    <span class="badge rise d1"><i></i>Android 8.0+ · v1.9.45 · 完全免费</span>
-    <h1 class="hero-t rise d2">一个链接，<br><span class="grad-text">存下全网视频</span></h1>
-    <p class="hero-p rise d3">21 个平台、4K 原画、8 路并行分片，音视频无损合成 —— 还能一键把水印抹掉。</p>
-    <div class="hero-cta rise d4">
-      <a class="btn btn-grad" href="#download">
-        下载 APK
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
-      </a>
-      <a class="btn btn-ghost" href="#features">了解功能</a>
-    </div>
-
-    <div class="hero-art rise d4">
-      <div class="glow"></div>
-      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=luxurious%203D%20render%20illustration%20of%20a%20floating%20smartphone%20surrounded%20by%20glossy%20rounded%20video%20cards%20and%20abstract%20geometric%20shapes%20hovering%20in%20the%20air%2C%20deep%20dark%20navy%20background%2C%20vivid%20red%20pink%20and%20violet%20neon%20glow%2C%20soft%20studio%20lighting%2C%20claymorphism%20premium%20product%20render%2C%20highly%20detailed%2C%20glossy%20surfaces%2C%20generous%20empty%20space%2C%20no%20text%2C%20no%20logo&image_size=landscape_16_9"
-           alt="" width="1600" height="1000" fetchpriority="high" decoding="async">
-    </div>
-
-    <div class="hero-stats rise d4">
-      <span class="chip"><b>21</b> 个平台</span>
-      <span class="chip"><b>4K</b> 原画</span>
-      <span class="chip"><b>8</b> 路并行</span>
-      <span class="chip"><b>0</b> 次链接外发</span>
-    </div>
+<div class="top">
+  <div class="top-in">
+    <a class="brand" href="#top">
+      <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
+        <rect width="48" height="48" rx="14" fill="#FF3B2F"/>
+        <circle cx="24" cy="29" r="13" fill="#fff"/>
+        <path d="M24 15c-1.9-2.9-5-4.3-7.7-4 .6 2.7 2.4 5 5.1 6-1.1-.2-2.3-.2-3.4 0 1.6 1.9 3.9 2.9 6 2.6 2.1.3 4.4-.7 6-2.6-1.1-.2-2.3-.2-3.4 0 2.7-1 4.5-3.3 5.1-6-2.7-.3-5.8 1.1-7.7 4z" fill="#3FA05A"/>
+      </svg>
+      <b>番茄大王</b>
+    </a>
+    <span class="top-meta">ANDROID 8.0+ ／ v1.9.45 ／ 完全免费</span>
+    <a class="btn btn-dark btn-sm" href="VideoDownloader-v1.9.45.apk" download>下载 APK</a>
   </div>
-</section>
+</div>
 
-<!-- ============ 功能 ============ -->
-<section class="sec" id="features">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="kicker">核心功能</span>
-      <h2>想得到的，都给你做好了</h2>
-      <p class="lead">从解析、下载到去水印，一条链路全部打通。</p>
-    </div>
-    <div class="grid-3">
-      <div class="glass cell rv"><div class="ic">01</div><b>粘贴即解析</b><p>复制分享链接回来，自动识别平台并展开短链。</p></div>
-      <div class="glass cell rv d-1"><div class="ic">02</div><b>画质任选</b><p>360P 到 4K 全档位可选，输出 MP4 / WebM。</p></div>
-      <div class="glass cell rv d-2"><div class="ic">03</div><b>多线程加速</b><p>8 路并行分片，最多 10 个任务同时下载。</p></div>
-      <div class="glass cell rv"><div class="ic">04</div><b>图集批量存</b><p>图片帖一次全部保存，不用逐张点。</p></div>
-      <div class="glass cell rv d-1"><div class="ic">05</div><b>断点续传</b><p>暂停、重启、断网都能接着下，不重来。</p></div>
-      <div class="glass cell rv d-2"><div class="ic">06</div><b>无广告无内购</b><p>打开就用，不弹窗、不诱导、不收费。</p></div>
-    </div>
-  </div>
-</section>
+<main class="bento" id="top">
 
-<!-- ============ 平台 ============ -->
-<section class="sec" id="platforms">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="kicker">支持平台</span>
-      <h2>全网 21 个平台</h2>
-      <p class="lead">短视频、长视频、音频与图片社区，持续更新。</p>
+  <!-- 主瓦片 -->
+  <section class="tile t-hero">
+    <div class="pad">
+      <span class="eyebrow">一个链接，存下全网视频</span>
+      <h1>21 个平台的视频，<br>都能存进你手机。</h1>
+      <p class="lede">4K 原画、8 路并行分片、音视频无损合成，还能一键抹掉水印。解析全程在本地完成。</p>
+      <div class="hero-figure">
+        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=clean%20flat%20vector%20illustration%20of%20a%20smartphone%20with%20rounded%20video%20thumbnail%20cards%20flying%20out%20of%20the%20screen%2C%20soft%20geometric%20shapes%20floating%20around%2C%20vivid%20red%20and%20warm%20orange%20palette%20with%20light%20grey%20accents%2C%20minimal%20modern%20editorial%20illustration%2C%20very%20light%20grey%20background%2C%20generous%20negative%20space%2C%20no%20text%2C%20no%20logo%2C%20no%20screen%20ui&image_size=landscape_16_9"
+             alt="" width="1600" height="1000" fetchpriority="high" decoding="async">
+      </div>
+      <div class="acts">
+        <a class="btn btn-red" href="VideoDownloader-v1.9.45.apk" download>
+          下载 APK
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
+        </a>
+        <a class="btn btn-line" href="#howto">怎么用</a>
+      </div>
     </div>
-  </div>
-  <div class="marquee rv d-1" aria-hidden="true">
-    <div class="track" id="track">
-      <span class="p-tag"><i></i>YouTube</span><span class="p-tag"><i></i>哔哩哔哩</span><span class="p-tag"><i></i>抖音</span>
-      <span class="p-tag"><i></i>TikTok</span><span class="p-tag"><i></i>小红书</span><span class="p-tag"><i></i>微博</span>
-      <span class="p-tag"><i></i>快手</span><span class="p-tag"><i></i>Instagram</span><span class="p-tag"><i></i>X / Twitter</span>
-      <span class="p-tag"><i></i>Facebook</span><span class="p-tag"><i></i>西瓜视频</span><span class="p-tag"><i></i>AcFun</span>
-      <span class="p-tag"><i></i>喜马拉雅</span><span class="p-tag"><i></i>Vimeo</span><span class="p-tag"><i></i>Reddit</span>
-      <span class="p-tag"><i></i>Pinterest</span><span class="p-tag"><i></i>Tumblr</span><span class="p-tag"><i></i>SoundCloud</span>
-      <span class="p-tag"><i></i>Dailymotion</span><span class="p-tag"><i></i>Bluesky</span><span class="p-tag"><i></i>Telegram</span>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- ============ 去水印 ============ -->
-<section class="sec" id="watermark">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="kicker">去水印</span>
-      <h2>水印，直接抹掉</h2>
-      <p class="lead">基于样例的图像修复逐帧填补 —— 拖动下面的滑块看对比。</p>
+  <!-- 数据瓦片 -->
+  <section class="tile t-stat ink">
+    <div class="pad">
+      <div class="v"><span data-count="21">0</span></div>
+      <div><div class="k">个平台已适配</div><div class="d">持续更新</div></div>
     </div>
-    <div class="wm">
-      <div class="rv">
+  </section>
+
+  <section class="tile t-stat red">
+    <div class="pad">
+      <div class="v"><span data-count="4">0</span><em>K</em></div>
+      <div><div class="k">最高清晰度</div><div class="d">360P – 4K</div></div>
+    </div>
+  </section>
+
+  <section class="tile t-stat">
+    <div class="pad">
+      <div class="v"><span data-count="8">0</span><em>路</em></div>
+      <div><div class="k">并行分片</div><div class="d">突破单连接限速</div></div>
+    </div>
+  </section>
+
+  <section class="tile t-stat">
+    <div class="pad">
+      <div class="v"><span data-count="100">0</span><em>%</em></div>
+      <div><div class="k">断点续传</div><div class="d">断了也能接着下</div></div>
+    </div>
+  </section>
+
+  <!-- 去水印 -->
+  <section class="tile t-wm t-wide">
+    <div class="pad">
+      <div class="head">
+        <h2>水印，直接抹掉</h2>
+        <span class="note">拖动滑块看对比 →</span>
+      </div>
+      <div class="wm-body">
         <div class="ba" id="ba" role="slider" aria-label="去水印前后对比，可左右拖动" tabindex="0">
           <div class="ba-layer">
             <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20vertical%20video%20still%20of%20a%20young%20woman%20walking%20through%20a%20neon%20lit%20city%20street%20at%20night%2C%20vibrant%20magenta%20and%20blue%20lights%2C%20shallow%20depth%20of%20field%2C%20social%20media%20short%20video%20look%2C%20high%20quality%2C%20clean%20frame%2C%20no%20text%2C%20no%20logo%2C%20no%20watermark&image_size=portrait_16_9"
@@ -387,96 +319,78 @@ h1.hero-t{margin-top:22px;font-size:clamp(40px,12.6vw,92px);letter-spacing:-.05e
           <span class="ba-tag r">处理后</span>
           <div class="ba-hd"></div>
         </div>
-      </div>
-      <div class="glass wm-list rv d-1">
-        <div class="row"><span class="n">01</span><div><b>图片 / 视频都支持</b><p>逐帧修复填补，保留原始画质与纹理细节。</p></div></div>
-        <div class="row"><span class="n">02</span><div><b>会动的水印也能跟</b><p>特征追踪 + 运动预测，水印移动时逐帧锁定。</p></div></div>
-        <div class="row"><span class="n">03</span><div><b>批量处理，音轨不动</b><p>多段排队后台跑；只重编码画面，音轨原样拷贝。</p></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 数字 ============ -->
-<section class="sec" id="speed">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="kicker">下载能力</span>
-      <h2>快，是有原因的</h2>
-      <p class="lead">从连接到落盘，整条链路都按「争分夺秒」设计。</p>
-    </div>
-    <div class="nums">
-      <div class="glass cell rv"><div class="v"><span data-count="8">0</span><em>路</em></div><div class="k">并行分片</div><div class="d">突破单连接限速</div></div>
-      <div class="glass cell rv d-1"><div class="v"><span data-count="10">0</span><em>个</em></div><div class="k">同时下载</div><div class="d">并发数可调</div></div>
-      <div class="glass cell rv d-2"><div class="v"><span data-count="4">0</span><em>K</em></div><div class="k">最高清晰度</div><div class="d">360P – 4K</div></div>
-      <div class="glass cell rv d-3"><div class="v"><span data-count="100">0</span><em>%</em></div><div class="k">断点续传</div><div class="d">断了也能接着下</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 隐私 ============ -->
-<section class="sec" id="privacy">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="kicker">隐私 · 本地</span>
-      <h2>解析发生在你的手机里</h2>
-      <p class="lead">不需要把链接发到任何第三方服务器，视频与合成文件全程只走本机存储。</p>
-    </div>
-    <div class="grid-3">
-      <div class="glass cell rv"><div class="ic">1</div><b>粘贴链接</b><p>自动识别平台，短链自动展开。</p></div>
-      <div class="glass cell rv d-1"><div class="ic">2</div><b>本机解析</b><p>内置引擎在本地拿到原始直链。</p></div>
-      <div class="glass cell rv d-2"><div class="ic">3</div><b>落盘保存</b><p>DASH 音视频无损合成后入库。</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 下载 ============ -->
-<section class="sec" id="download" style="padding-top:0">
-  <div class="wrap">
-    <div class="glass cta rv">
-      <div class="cta-in">
-        <h2>现在就把链接，<br><span class="grad-text">变成你手机里的文件</span>。</h2>
-        <p>下载后直接覆盖安装，保存进度不受影响。</p>
-        <div class="cta-row">
-          <a class="btn btn-grad" href="VideoDownloader-v1.9.45.apk" download>
-            下载番茄大王 APK
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
-          </a>
-          <a class="btn btn-ghost" href="#top">回到顶部</a>
+        <div class="wm-points">
+          <div><span class="n">01</span><div><b>图片 / 视频都支持</b><p>逐帧修复填补，保留原始画质与纹理。</p></div></div>
+          <div><span class="n">02</span><div><b>会动的水印也能跟</b><p>特征追踪 + 运动预测，逐帧锁定位置。</p></div></div>
+          <div><span class="n">03</span><div><b>音轨原样不动</b><p>只重编码画面，音频直接拷贝。</p></div></div>
         </div>
-        <p class="filename">VideoDownloader-v1.9.45.apk ｜ 约 31 MB ｜ Android 8.0+</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- 平台 -->
+  <section class="tile t-plat t-tall">
+    <div class="pad">
+      <span class="eyebrow">支持平台</span>
+      <h2 style="margin-top:12px;font-size:clamp(20px,2.6vw,26px)">21 个平台，一个入口</h2>
+      <div class="tags">
+        <span class="tag">YouTube</span><span class="tag">哔哩哔哩</span><span class="tag">抖音</span>
+        <span class="tag">TikTok</span><span class="tag">小红书</span><span class="tag">微博</span>
+        <span class="tag">快手</span><span class="tag">Instagram</span><span class="tag">X</span>
+        <span class="tag">Facebook</span><span class="tag">西瓜视频</span><span class="tag">AcFun</span>
+        <span class="tag">喜马拉雅</span><span class="tag">Vimeo</span><span class="tag">Reddit</span>
+        <span class="tag">Pinterest</span><span class="tag">Tumblr</span><span class="tag">SoundCloud</span>
+        <span class="tag">Dailymotion</span><span class="tag">Bluesky</span><span class="tag">Telegram</span>
+        <span class="tag more">持续更新…</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 本地解析 -->
+  <section class="tile t-priv t-wide t-tall" id="howto">
+    <div class="pad">
+      <span class="eyebrow" style="color:var(--lime)">隐私 · 本地</span>
+      <h2 style="margin-top:12px">解析发生在你的手机里</h2>
+      <p class="lead">不需要把链接发到任何第三方服务器，视频与合成文件全程只走本机存储。</p>
+      <div class="steps">
+        <div class="step"><div class="d">STEP 01</div><b>粘贴链接</b><p>自动识别平台，短链展开。</p></div>
+        <div class="step"><div class="d">STEP 02</div><b>本机解析</b><p>本地拿到原始直链。</p></div>
+        <div class="step"><div class="d">STEP 03</div><b>落盘保存</b><p>无损合成后入库。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 结尾 -->
+  <section class="tile t-cta t-full">
+    <div class="pad">
+      <div>
+        <h2>把链接变成文件，只要一次粘贴。</h2>
+        <div class="meta">VideoDownloader-v1.9.45.apk ／ 约 31 MB ／ Android 8.0+</div>
+      </div>
+      <div class="acts">
+        <a class="btn" href="VideoDownloader-v1.9.45.apk" download>
+          下载番茄大王 APK
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
 
 <footer class="ft">
-  <div class="ft-in">
-    <a class="brand" href="#top">
-      <svg class="mark" viewBox="0 0 48 48" aria-hidden="true" style="width:22px;height:22px;border-radius:7px">
-        <rect width="48" height="48" rx="14" fill="#FF4B3E"/>
-        <circle cx="24" cy="29" r="13" fill="#fff"/>
-      </svg>
-      <b>番茄大王</b>
-    </a>
-    <span>v1.9.45 ｜ com.videodownloader.app</span>
-    <span>© 2026 番茄大王</span>
-  </div>
+  <span>© 2026 番茄大王</span>
+  <span>com.videodownloader.app</span>
 </footer>
 
-</div><!-- /page -->
-
 <div class="dock" id="dock">
-  <a class="btn btn-grad" href="VideoDownloader-v1.9.45.apk" download>下载番茄大王 APK <span>· 31 MB</span></a>
+  <a class="btn btn-red" href="VideoDownloader-v1.9.45.apk" download>下载番茄大王 APK · 31 MB</a>
 </div>
 
 <script>
 (function () {
   'use strict';
-  var nav = document.getElementById('nav');
   var dock = document.getElementById('dock');
-  var hero = document.getElementById('top');
-  var cta = document.getElementById('download');
   var ticking = false;
 
   function onScroll() {
@@ -484,10 +398,8 @@ h1.hero-t{margin-top:22px;font-size:clamp(40px,12.6vw,92px);letter-spacing:-.05e
     ticking = true;
     requestAnimationFrame(function () {
       var y = window.scrollY || window.pageYOffset || 0;
-      if (nav) nav.classList.toggle('solid', y > 10);
-      if (dock && hero) {
-        var nearCta = cta && cta.getBoundingClientRect().top < window.innerHeight * 0.9;
-        var show = y > (hero.offsetHeight || 1) * 0.5 && !nearCta;
+      if (dock) {
+        var show = y > 380;
         dock.classList.toggle('show', show);
         document.body.classList.toggle('docked', show);
       }
@@ -496,26 +408,32 @@ h1.hero-t{margin-top:22px;font-size:clamp(40px,12.6vw,92px);letter-spacing:-.05e
   }
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
 
-  var items = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+  var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
-    items.forEach(function (el) { io.observe(el); });
-    setTimeout(function () {
-      items.forEach(function (el) {
-        if (!el.classList.contains('in') && el.getBoundingClientRect().top < window.innerHeight) el.classList.add('in');
+      es.forEach(function (e, i) {
+        if (e.isIntersecting) {
+          var el = e.target;
+          el.style.transitionDelay = Math.min(i * 45, 220) + 'ms';
+          el.classList.add('in');
+          io.unobserve(el);
+        }
       });
-    }, 1200);
+    }, { threshold: 0.06, rootMargin: '0px 0px -3% 0px' });
+    tiles.forEach(function (t) { io.observe(t); });
+    setTimeout(function () {
+      tiles.forEach(function (t) {
+        if (!t.classList.contains('in') && t.getBoundingClientRect().top < window.innerHeight) t.classList.add('in');
+      });
+    }, 1100);
   } else {
-    items.forEach(function (el) { el.classList.add('in'); });
+    tiles.forEach(function (t) { t.classList.add('in'); });
   }
 
   var nums = document.querySelectorAll('[data-count]');
   function count(el) {
-    var to = parseInt(el.getAttribute('data-count'), 10) || 0, dur = 1000, t0 = performance.now();
+    var to = parseInt(el.getAttribute('data-count'), 10) || 0, dur = 900, t0 = performance.now();
     (function tick(now) {
       var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.round(to * e);
@@ -572,13 +490,6 @@ h1.hero-t{margin-top:22px;font-size:clamp(40px,12.6vw,92px);letter-spacing:-.05e
       }, { threshold: 0.4 });
       demo.observe(ba);
     }
-  }
-
-  var track = document.getElementById('track');
-  if (track) {
-    var clone = track.cloneNode(true);
-    clone.removeAttribute('id');
-    track.parentNode.appendChild(clone);
   }
 })();
 </script>
