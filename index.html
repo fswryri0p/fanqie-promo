@@ -3,482 +3,410 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="color-scheme" content="light" />
+<meta name="color-scheme" content="light dark" />
 <title>番茄大王 · 一个链接，存下全网视频</title>
 <meta name="description" content="番茄大王 —— Android 端视频下载与去水印工具。21 个平台、4K 原画、8 路并行分片、音视频无损合成，解析完全在本地完成。" />
-<meta name="theme-color" content="#F6F6F8" />
+<meta name="theme-color" content="#FFFFFF" />
 <script>document.documentElement.classList.add('js')</script>
 <style>
 /* ==================================================================
-   番茄大王 · 亮色圆角卡片 · 产品展示风
+   番茄大王 · 苹果官网式版式 + 插画主导
+   通栏大区块交替 / 超大字居中 / 大留白 / 无卡片网格
    ================================================================== */
 :root{
-  --bg:#F6F6F8;
-  --card:#FFFFFF;
-  --ink:#14121A;
-  --ink-2:#3A3644;
-  --muted:#6B6875;
-  --faint:#9E9BAA;
-  --red:#FF4B3E;
+  --white:#FFFFFF;
+  --grey:#F5F5F7;
+  --dark:#0B0B0D;
+  --ink:#1D1D1F;
+  --ink-onDark:#F5F5F7;
+  --muted:#6E6E73;
+  --muted-onDark:#A1A1A6;
+  --red:#FF4433;
   --red-2:#E0362A;
-  --orange:#FF8A3D;
-  --tint:#FFF1EF;
-  --line:rgba(20,18,26,.08);
-  --r:26px;
+  --hair:rgba(0,0,0,.10);
+  --hair-d:rgba(255,255,255,.16);
 
-  --sans:-apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC",
-         "MiSans", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei",
-         system-ui, "Segoe UI", Roboto, sans-serif;
+  --sans:-apple-system, BlinkMacSystemFont, "SF Pro SC", "SF Pro Text", "PingFang SC",
+         "HarmonyOS Sans SC", "MiSans", "Source Han Sans SC", "Noto Sans CJK SC",
+         "Microsoft YaHei", system-ui, "Segoe UI", Roboto, sans-serif;
   --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --pad:clamp(18px,5vw,64px);
-  --maxw:1120px;
-  --hdr:62px;
-  --ease:cubic-bezier(.19,1,.22,1);
+  --pad:clamp(20px,5vw,60px);
+  --maxw:980px;      /* 苹果式的窄正文栏 */
+  --wide:1180px;     /* 插画区可以更宽 */
+  --nav:48px;
+  --ease:cubic-bezier(.28,.11,.32,1);
 
   --st:env(safe-area-inset-top,0px);
   --sb:env(safe-area-inset-bottom,0px);
   --sl:env(safe-area-inset-left,0px);
   --sr:env(safe-area-inset-right,0px);
 }
-@media (min-width:900px){ :root{ --hdr:72px } }
 
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;
-  scroll-padding-top:calc(var(--hdr) + var(--st) + 20px)}
+  scroll-padding-top:calc(var(--nav) + var(--st) + 16px)}
 html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);
-  line-height:1.62;overflow-x:hidden;
+body{background:var(--white);color:var(--ink);font-family:var(--sans);
+  line-height:1.47;letter-spacing:-.012em;overflow-x:hidden;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   -webkit-tap-highlight-color:transparent}
 img{display:block;max-width:100%;-webkit-user-drag:none}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--red);color:#fff}
-:focus-visible{outline:2px solid var(--red);outline-offset:3px;border-radius:10px}
-h1,h2,h3{margin:0;line-height:1.14;letter-spacing:-.032em;font-weight:800}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:6px}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.028em;line-height:1.06}
 p{margin:0}
-section[id]{scroll-margin-top:calc(var(--hdr) + var(--st) + 20px)}
+section[id]{scroll-margin-top:calc(var(--nav) + var(--st) + 16px)}
 
-.wrap{max-width:var(--maxw);margin:0 auto;
+.col{max-width:var(--maxw);margin:0 auto;
   padding-left:max(var(--pad),var(--sl));padding-right:max(var(--pad),var(--sr))}
-.card{background:var(--card);border-radius:var(--r);border:1px solid var(--line);
-  box-shadow:0 2px 4px rgba(20,18,26,.03), 0 18px 40px -28px rgba(20,18,26,.22)}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;
-  letter-spacing:.06em;color:var(--red-2);background:var(--tint);
-  padding:6px 13px;border-radius:999px}
-.h2{font-size:clamp(26px,5.6vw,44px)}
-.lead{margin-top:14px;color:var(--muted);font-size:clamp(14.5px,1.6vw,16.5px);max-width:46ch}
+.col-w{max-width:var(--wide);margin:0 auto;
+  padding-left:max(var(--pad),var(--sl));padding-right:max(var(--pad),var(--sr))}
 
-/* ---------------- 按钮 ---------------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  min-height:52px;padding:15px 28px;border-radius:999px;border:0;cursor:pointer;
-  font-weight:800;font-size:16px;line-height:1;white-space:nowrap;
-  transition:transform .22s var(--ease), box-shadow .22s var(--ease), background .22s, color .22s}
-.btn svg{width:17px;height:17px;flex:0 0 auto}
-.btn-red{background:linear-gradient(180deg,#FF5C4F,#E93A2C);color:#fff;
-  box-shadow:0 12px 26px -10px rgba(255,75,62,.7)}
-.btn-white{background:#fff;color:var(--red-2)}
-.btn-soft{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
-.btn-sm{min-height:42px;padding:10px 18px;font-size:14px}
-.btn:active{transform:translateY(1px) scale(.995)}
-@media (hover:hover){
-  .btn-red:hover{transform:translateY(-2px);box-shadow:0 20px 34px -12px rgba(255,75,62,.85)}
-  .btn-soft:hover{transform:translateY(-2px);border-color:rgba(255,75,62,.35)}
-  .btn-white:hover{transform:translateY(-2px)}
-}
+/* ---------------- 按钮（苹果式胶囊） ---------------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:48px;padding:13px 26px;border-radius:999px;border:0;cursor:pointer;
+  font-size:16px;font-weight:600;line-height:1;white-space:nowrap;
+  transition:transform .22s var(--ease), background .22s, color .22s, box-shadow .22s}
+.btn svg{width:16px;height:16px;flex:0 0 auto}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#F0554A}
+.btn-quiet{color:var(--red-2);background:transparent;padding-left:8px;padding-right:8px}
+.btn-quiet:hover{text-decoration:underline}
+.btn-white{background:#fff;color:var(--dark)}
+.btn-line{border:1px solid var(--hair);background:transparent;color:var(--ink)}
+.btn-line.light{border-color:var(--hair-d);color:var(--ink-onDark)}
+.btn-sm{min-height:34px;padding:8px 16px;font-size:13px}
+.btn:active{transform:scale(.98)}
+.arrow{display:inline-block;transition:transform .25s var(--ease)}
+.btn-quiet:hover .arrow,.link:hover .arrow{transform:translateX(3px)}
 
-/* ---------------- 页头 ---------------- */
-.hdr{position:fixed;top:0;left:0;right:0;z-index:80;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  min-height:var(--hdr);
-  padding:calc(9px + var(--st)) max(var(--pad),var(--sr)) 9px max(var(--pad),var(--sl));
-  transition:background .3s, box-shadow .3s, backdrop-filter .3s}
-.hdr.solid{background:rgba(246,246,248,.85);
-  backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
-  box-shadow:0 1px 0 var(--line)}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-.brand .mark{width:32px;height:32px;flex:0 0 auto;border-radius:10px;
-  box-shadow:0 6px 14px -6px rgba(255,75,62,.8)}
-.brand b{font-size:18px;font-weight:800;letter-spacing:-.035em;white-space:nowrap}
-.hdr-nav{display:flex;gap:26px;font-size:14.5px;color:var(--muted);font-weight:600}
-@media (hover:hover){ .hdr-nav a:hover{color:var(--ink)} }
-@media (max-width:940px){ .hdr-nav{display:none} }
-@media (max-width:430px){ .brand b{font-size:16.5px} .hdr .btn{padding:9px 15px;font-size:13px;min-height:38px} }
+/* ---------------- 顶部导航（苹果式细条） ---------------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:80;min-height:var(--nav);
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:calc(6px + var(--st)) max(var(--pad),var(--sr)) 6px max(var(--pad),var(--sl));
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid transparent;transition:border-color .3s, background .3s}
+.nav.solid{border-bottom-color:var(--hair)}
+.nav.on-dark{background:rgba(11,11,13,.72);color:var(--ink-onDark)}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.brand .mark{width:24px;height:24px;border-radius:7px;flex:0 0 auto}
+.brand b{font-size:15.5px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+.nav-links{display:flex;gap:26px;font-size:12.5px;color:inherit;opacity:.82}
+@media (hover:hover){ .nav-links a:hover{opacity:1} }
+@media (max-width:900px){ .nav-links{display:none} }
+@media (max-width:400px){ .brand b{font-size:14.5px} .nav .btn{padding:7px 13px;font-size:12.5px} }
+
+/* ---------------- 通栏区块 ---------------- */
+.band{position:relative;overflow:hidden}
+.band.white{background:var(--white);color:var(--ink)}
+.band.grey{background:var(--grey);color:var(--ink)}
+.band.dark{background:var(--dark);color:var(--ink-onDark)}
+.band-pad{padding:clamp(72px,11vh,140px) 0}
+.band-pad-tight{padding:clamp(56px,8vh,104px) 0}
+
+.eyebrow{font-size:14px;font-weight:700;letter-spacing:-.01em;color:var(--red-2)}
+.band.dark .eyebrow{color:#FF6A5C}
+.h1{font-size:clamp(40px,10.6vw,96px);letter-spacing:-.045em;line-height:1.03}
+@media (min-width:900px){ .h1{font-size:clamp(56px,6.6vw,96px)} }
+.h2{font-size:clamp(32px,8vw,72px);letter-spacing:-.042em;line-height:1.04}
+@media (min-width:900px){ .h2{font-size:clamp(44px,5vw,72px)} }
+.h3{font-size:clamp(20px,3.4vw,26px);letter-spacing:-.028em;font-weight:700}
+.lede{margin-top:18px;font-size:clamp(17px,2.4vw,21px);color:var(--muted);letter-spacing:-.012em}
+.band.dark .lede{color:var(--muted-onDark)}
+.center{text-align:center}
 
 /* ---------------- 首屏 ---------------- */
-.hero{position:relative;overflow:hidden;
-  padding-top:calc(var(--hdr) + var(--st) + clamp(26px,5vh,54px));
-  padding-bottom:clamp(40px,6vh,72px);text-align:center}
-.hero-blob{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none;z-index:0}
-.hero-blob.a{width:min(520px,88vw);height:min(520px,88vw);top:-16%;left:-14%;
-  background:radial-gradient(circle,rgba(255,75,62,.30),rgba(255,75,62,0) 70%)}
-.hero-blob.b{width:min(460px,80vw);height:min(460px,80vw);top:6%;right:-16%;
-  background:radial-gradient(circle,rgba(255,138,61,.28),rgba(255,138,61,0) 70%)}
-.hero-in{position:relative;z-index:1}
-.hero h1{margin-top:20px;font-size:clamp(38px,12.4vw,80px);letter-spacing:-.045em;line-height:1.06}
-.hero h1 em{font-style:normal;
-  background:linear-gradient(100deg,var(--red),var(--orange));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero-sub{margin:20px auto 0;max-width:34ch;color:var(--muted);font-size:clamp(15px,1.7vw,18px)}
-.hero-cta{margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.hero-shot{position:relative;margin:clamp(34px,5vh,56px) auto 0;max-width:660px}
-.hero-shot .card{overflow:hidden;padding:12px}
-.hero-shot img{width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-radius:18px}
-.hero-pills{margin-top:20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);
-  border-radius:999px;padding:9px 16px;font-size:13.5px;font-weight:700;color:var(--ink-2)}
-.pill i{width:7px;height:7px;border-radius:50%;background:var(--red);flex:0 0 auto}
+.hero{padding-top:calc(var(--nav) + var(--st) + clamp(34px,7vh,76px))}
+.hero .h1{max-width:15em;margin:0 auto}
+.hero .lede{max-width:26em;margin-left:auto;margin-right:auto}
+.hero-cta{margin-top:28px;display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap}
+.hero-art{margin:clamp(38px,6vh,72px) auto 0;max-width:820px}
+.hero-art img{width:100%;height:auto;aspect-ratio:16/10;object-fit:contain}
 
-/* ---------------- 区块 ---------------- */
-.sec{padding:clamp(52px,8vh,104px) 0}
-.sec-head{text-align:center;max-width:640px;margin:0 auto}
-.sec-head .lead{margin-left:auto;margin-right:auto}
+/* ---------------- 插画通用 ---------------- */
+.art{margin:clamp(34px,5vh,64px) auto 0}
+.art img{width:100%;height:auto;object-fit:contain}
 
-/* 特性卡片 */
-.feat-grid{margin-top:clamp(28px,4vw,44px);display:grid;gap:14px;grid-template-columns:1fr}
-@media (min-width:680px){ .feat-grid{grid-template-columns:repeat(2,1fr)} }
-@media (min-width:1000px){ .feat-grid{grid-template-columns:repeat(4,1fr)} }
-.feat{padding:24px 22px}
-.feat .ic{width:44px;height:44px;border-radius:14px;background:var(--tint);color:var(--red-2);
-  display:grid;place-items:center;font-family:var(--mono);font-size:14px;font-weight:800}
-.feat b{display:block;margin-top:16px;font-size:17px;font-weight:800;letter-spacing:-.02em}
-.feat p{margin-top:7px;color:var(--muted);font-size:14.5px}
-
-/* 平台 */
-.tags{margin-top:clamp(26px,4vw,38px);display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-.tag{background:#fff;border:1px solid var(--line);border-radius:999px;padding:11px 18px;
-  font-size:14.5px;font-weight:700;color:var(--ink-2);
-  transition:transform .22s var(--ease), border-color .22s, color .22s}
-@media (hover:hover){
-  .tag:hover{transform:translateY(-3px);border-color:rgba(255,75,62,.4);color:var(--red-2)}
-}
-
-/* 去水印 */
-.wm{margin-top:clamp(28px,4vw,44px);display:grid;gap:14px}
-@media (min-width:900px){ .wm{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start} }
-.ba{position:relative;width:100%;max-width:340px;margin:0 auto;aspect-ratio:3/4;
-  border-radius:20px;overflow:hidden;background:#111;
-  touch-action:pan-y;-webkit-user-select:none;user-select:none;
+/* ---------------- 去水印（深色通栏） ---------------- */
+.ba-wrap{margin:clamp(34px,5vh,60px) auto 0;display:flex;justify-content:center}
+.ba{position:relative;width:min(400px,86vw);aspect-ratio:3/4;border-radius:22px;overflow:hidden;
+  background:#111;touch-action:pan-y;-webkit-user-select:none;user-select:none;
   -webkit-touch-callout:none;cursor:ew-resize;--pos:58%;
-  box-shadow:0 22px 50px -26px rgba(20,18,26,.5)}
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.9), 0 0 0 1px var(--hair-d)}
 .ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .ba-layer{position:absolute;inset:0}
 .ba-before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
-.ba-wm{position:absolute;right:10%;bottom:14%;padding:6px 12px;border-radius:10px;
-  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);color:#fff;
+.ba-wm{position:absolute;right:10%;bottom:14%;padding:7px 13px;border-radius:9px;
+  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.22);color:#fff;
   font-size:12.5px;font-weight:600}
-.ba-tag{position:absolute;top:12px;padding:6px 13px;border-radius:999px;
-  font-size:11.5px;font-weight:800;letter-spacing:.04em}
-.ba-tag.l{left:12px;background:rgba(255,255,255,.92);color:var(--ink)}
-.ba-tag.r{right:12px;background:var(--red);color:#fff}
+.ba-tag{position:absolute;top:14px;padding:6px 14px;border-radius:999px;
+  font-size:11.5px;font-weight:700;letter-spacing:.04em}
+.ba-tag.l{left:14px;background:rgba(255,255,255,.94);color:var(--dark)}
+.ba-tag.r{right:14px;background:var(--red);color:#fff}
 .ba-hd{position:absolute;top:0;bottom:0;left:var(--pos);width:2.5px;transform:translateX(-1px);
-  background:#fff;box-shadow:0 0 12px rgba(0,0,0,.35)}
-.ba-hd::after{content:"";position:absolute;top:50%;left:50%;width:52px;height:52px;
+  background:#fff;box-shadow:0 0 14px rgba(0,0,0,.5)}
+.ba-hd::after{content:"";position:absolute;top:50%;left:50%;width:54px;height:54px;
   transform:translate(-50%,-50%);border-radius:50%;background:#fff;
-  box-shadow:0 6px 20px rgba(0,0,0,.3);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='52' viewBox='0 0 52 52'%3E%3Cpath d='M21 18l-5 8 5 8M31 18l5 8-5 8' stroke='%23FF4B3E' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3E%3Cpath d='M22 19l-5 8 5 8M32 19l5 8-5 8' stroke='%23FF4433' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:center}
-.wm-card{padding:26px 22px}
-.wm-card .row{display:flex;gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}
-.wm-card .row:first-child{padding-top:0}
-.wm-card .row:last-child{border-bottom:0;padding-bottom:0}
-.wm-card .n{flex:0 0 30px;height:30px;border-radius:10px;background:var(--tint);color:var(--red-2);
-  display:grid;place-items:center;font-family:var(--mono);font-size:12.5px;font-weight:800}
-.wm-card b{display:block;font-size:16px;font-weight:800;margin-bottom:4px}
-.wm-card p{color:var(--muted);font-size:14.5px}
+.ba-hint{margin-top:18px;text-align:center;font-size:13px;color:var(--muted-onDark)}
 
-/* 数字 */
-.stats{margin-top:clamp(28px,4vw,44px);display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
-@media (min-width:820px){ .stats{grid-template-columns:repeat(4,1fr)} }
-.stat{padding:26px 20px;text-align:center}
-.stat .v{font-size:clamp(32px,7.4vw,50px);font-weight:800;line-height:1;letter-spacing:-.045em;
-  background:linear-gradient(180deg,var(--red),var(--orange));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
+/* 三栏说明（无卡片，靠留白与对齐） */
+.trio{margin-top:clamp(40px,6vh,72px);display:grid;gap:clamp(28px,4vw,48px)}
+@media (min-width:820px){ .trio{grid-template-columns:repeat(3,1fr)} }
+.trio .n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--red-2);letter-spacing:.06em}
+.band.dark .trio .n{color:#FF6A5C}
+.trio b{display:block;margin-top:10px;font-size:19px;font-weight:700;letter-spacing:-.026em}
+.trio p{margin-top:8px;color:var(--muted);font-size:16px}
+.band.dark .trio p{color:var(--muted-onDark)}
+
+/* ---------------- 平台：规格网格（无边框） ---------------- */
+.specs{margin-top:clamp(36px,5vh,60px);display:grid;grid-template-columns:repeat(2,1fr);
+  gap:14px 24px}
+@media (min-width:700px){ .specs{grid-template-columns:repeat(4,1fr)} }
+.specs span{font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.015em}
+.specs span.more{color:var(--muted);font-weight:500}
+
+/* ---------------- 数字：超大号 ---------------- */
+.numbers{margin-top:clamp(36px,5vh,60px);display:grid;gap:clamp(30px,4vw,44px);
+  grid-template-columns:repeat(2,1fr);text-align:center}
+@media (min-width:820px){ .numbers{grid-template-columns:repeat(4,1fr)} }
+.num .v{font-size:clamp(46px,12vw,88px);font-weight:800;letter-spacing:-.05em;line-height:.92;
   font-variant-numeric:tabular-nums}
-.stat .v em{font-style:normal;font-size:.4em;margin-left:2px}
-.stat .k{margin-top:12px;font-size:15px;font-weight:800}
-.stat .d{margin-top:5px;font-size:13.5px;color:var(--muted)}
+.num .v em{font-style:normal;font-size:.36em;color:var(--red);letter-spacing:-.02em}
+.num .k{margin-top:12px;font-size:19px;font-weight:700;letter-spacing:-.026em}
+.num .d{margin-top:6px;font-size:15px;color:var(--muted)}
 
-/* 步骤 */
-.steps{margin-top:clamp(28px,4vw,44px);display:grid;gap:14px}
-@media (min-width:820px){ .steps{grid-template-columns:repeat(3,1fr)} }
-.step{padding:26px 22px}
-.step .n{width:38px;height:38px;border-radius:12px;background:var(--red);color:#fff;
-  display:grid;place-items:center;font-family:var(--mono);font-size:14px;font-weight:800}
-.step b{display:block;margin-top:16px;font-size:17px;font-weight:800}
-.step p{margin-top:6px;color:var(--muted);font-size:14.5px}
+/* ---------------- 结尾 ---------------- */
+.cta-title{font-size:clamp(34px,8.6vw,76px);letter-spacing:-.045em;line-height:1.05;max-width:14em;margin:0 auto}
+.cta-row{margin-top:30px;display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap}
+.filename{margin-top:22px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 
-/* 结尾 */
-.cta{margin-top:clamp(20px,4vh,44px);position:relative;overflow:hidden;border-radius:28px;
-  background:linear-gradient(135deg,#FF5C4F,#E0362A 62%,#C9271C);
-  color:#fff;padding:clamp(46px,7vh,84px) clamp(24px,5vw,64px);
-  text-align:center;box-shadow:0 30px 60px -30px rgba(224,54,42,.75)}
-.cta::before{content:"";position:absolute;top:-40%;right:-14%;
-  width:min(460px,80vw);height:min(460px,80vw);border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,.22),rgba(255,255,255,0) 68%)}
-.cta-in{position:relative;z-index:1}
-.cta h2{font-size:clamp(28px,7vw,54px);letter-spacing:-.045em;max-width:16em;margin:0 auto}
-.cta p{margin-top:14px;color:rgba(255,255,255,.9);font-size:clamp(14.5px,1.6vw,16.5px)}
-.cta-row{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.cta .btn-white{background:#fff;color:var(--red-2)}
-.cta-file{margin-top:16px;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.78)}
+/* ---------------- 页脚 ---------------- */
+.ft{background:var(--grey);border-top:1px solid var(--hair);
+  padding:30px max(var(--pad),var(--sr)) calc(30px + var(--sb)) max(var(--pad),var(--sl))}
+.ft-in{max-width:var(--wide);margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-size:12px;color:var(--muted)}
+.ft .brand b{font-size:14px;color:var(--ink)}
 
-/* 页脚 */
-.ft{max-width:var(--maxw);margin:0 auto;
-  padding:30px max(var(--pad),var(--sr)) calc(30px + var(--sb)) max(var(--pad),var(--sl));
-  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
-  color:var(--faint);font-size:13px}
-.ft .brand b{font-size:15.5px}
-.ft .brand .mark{width:24px;height:24px}
-
-/* 底部常驻下载条 */
+/* ---------------- 移动端常驻下载条 ---------------- */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:75;display:none;
   padding:10px max(var(--pad),var(--sr)) calc(10px + var(--sb)) max(var(--pad),var(--sl));
-  background:rgba(246,246,248,.9);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  box-shadow:0 -1px 0 var(--line), 0 -16px 34px -26px rgba(20,18,26,.4);
-  transform:translateY(130%);transition:transform .4s var(--ease)}
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid var(--hair);
+  transform:translateY(130%);transition:transform .45s var(--ease)}
 .dock.show{transform:none}
 .dock .btn{width:100%}
-.dock .btn span{font-weight:600;font-size:13px;opacity:.85}
-@media (max-width:940px){ .dock{display:block} body.docked .ft{padding-bottom:86px} }
+.dock .btn span{font-weight:500;font-size:13px;opacity:.8}
+@media (max-width:900px){ .dock{display:block} body.docked .ft{padding-bottom:88px} }
 
-/* 动效 */
-.js .rise{opacity:0;transform:translateY(20px);animation:rise .8s var(--ease) forwards}
-@keyframes rise{to{opacity:1;transform:none}}
-.d1{animation-delay:.06s}.d2{animation-delay:.16s}.d3{animation-delay:.26s}.d4{animation-delay:.36s}
-.js .rv{opacity:0;transform:translateY(22px);transition:opacity .75s var(--ease), transform .75s var(--ease)}
+/* ---------------- 动效 ---------------- */
+.js .rv{opacity:0;transform:translateY(30px);
+  transition:opacity .9s var(--ease), transform .9s var(--ease)}
 .js .rv.in{opacity:1;transform:none}
-.rv.d-1{transition-delay:.07s}.rv.d-2{transition-delay:.14s}.rv.d-3{transition-delay:.21s}
+.rv.d-1{transition-delay:.08s}.rv.d-2{transition-delay:.16s}.rv.d-3{transition-delay:.24s}
 
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   html{scroll-behavior:auto}
-  .js .rv,.js .rise{opacity:1;transform:none}
+  .js .rv{opacity:1;transform:none}
 }
 </style>
 </head>
 <body>
 
-<header class="hdr" id="hdr">
-  <a class="brand" href="#top" aria-label="番茄大王 首页">
+<!-- ============ 导航 ============ -->
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="番茄大王">
     <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
-      <rect width="48" height="48" rx="14" fill="#FF4B3E"/>
-      <circle cx="24" cy="29" r="13" fill="#fff" opacity=".96"/>
+      <rect width="48" height="48" rx="14" fill="#FF4433"/>
+      <circle cx="24" cy="29" r="13" fill="#fff"/>
       <path d="M24 15c-1.9-2.9-5-4.3-7.7-4 .6 2.7 2.4 5 5.1 6-1.1-.2-2.3-.2-3.4 0 1.6 1.9 3.9 2.9 6 2.6 2.1.3 4.4-.7 6-2.6-1.1-.2-2.3-.2-3.4 0 2.7-1 4.5-3.3 5.1-6-2.7-.3-5.8 1.1-7.7 4z" fill="#3FA05A"/>
     </svg>
     <b>番茄大王</b>
   </a>
-  <nav class="hdr-nav">
+  <nav class="nav-links">
     <a href="#features">功能</a>
-    <a href="#platforms">支持平台</a>
+    <a href="#platforms">平台</a>
     <a href="#watermark">去水印</a>
-    <a href="#privacy">本地解析</a>
+    <a href="#speed">速度</a>
+    <a href="#privacy">隐私</a>
   </nav>
-  <a class="btn btn-red btn-sm" href="#download">下载 APK</a>
+  <a class="btn btn-red btn-sm" href="#download">下载</a>
 </header>
 
 <!-- ============ 首屏 ============ -->
-<section class="hero" id="top">
-  <div class="hero-blob a"></div>
-  <div class="hero-blob b"></div>
-  <div class="wrap hero-in">
-    <span class="eyebrow rise d1">Android 8.0+ ｜ v1.9.45 ｜ 完全免费</span>
-    <h1 class="rise d2">一个链接，<br>存下<em>全网视频</em></h1>
-    <p class="hero-sub rise d3">21 个平台、4K 原画、8 路并行分片，音视频无损合成 —— 还能一键把水印抹掉。</p>
-    <div class="hero-cta rise d4">
-      <a class="btn btn-red" href="#download">
-        下载 APK
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
-      </a>
-      <a class="btn btn-soft" href="#features">看看功能</a>
+<section class="band white hero" id="top">
+  <div class="col center">
+    <p class="eyebrow rv">Android 8.0+ 　·　 v1.9.45</p>
+    <h1 class="h1 rv d-1" style="margin-top:14px">一个链接，<br>存下全网视频</h1>
+    <p class="lede rv d-2">21 个平台、4K 原画、8 路并行分片，音视频无损合成，还能一键抹掉水印。</p>
+    <div class="hero-cta rv d-3">
+      <a class="btn btn-red" href="#download">下载 APK</a>
+      <a class="btn btn-quiet link" href="#features">了解功能 <span class="arrow">›</span></a>
     </div>
-
-    <div class="hero-shot rise d4">
-      <div class="card">
-        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=bright%20airy%20lifestyle%20photograph%20of%20a%20hand%20holding%20a%20smartphone%2C%20soft%20light%20grey%20and%20warm%20white%20background%2C%20gentle%20daylight%2C%20minimal%20clean%20composition%2C%20soft%20natural%20shadows%2C%20high-key%20modern%20product%20photography%2C%20shallow%20depth%20of%20field%2C%20no%20text%2C%20no%20logo%2C%20no%20screen%20interface&image_size=landscape_16_9"
-             alt="番茄大王" width="1600" height="1000" fetchpriority="high" decoding="async">
-      </div>
-    </div>
-
-    <div class="hero-pills rise d4">
-      <span class="pill"><i></i>21 个平台</span>
-      <span class="pill"><i></i>4K 原画</span>
-      <span class="pill"><i></i>无水印</span>
-      <span class="pill"><i></i>无广告</span>
-      <span class="pill"><i></i>链接不外发</span>
+  </div>
+  <div class="col-w">
+    <div class="hero-art rv d-3">
+      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=beautiful%20flat%20vector%20illustration%20of%20a%20modern%20smartphone%20floating%20at%20a%20slight%20angle%2C%20surrounded%20by%20colorful%20abstract%20shapes%2C%20rounded%20video%20thumbnail%20cards%20and%20soft%20geometric%20forms%20floating%20in%20the%20air%2C%20warm%20red%20orange%20and%20coral%20palette%20with%20soft%20peach%20highlights%2C%20clean%20minimal%20editorial%20illustration%20style%2C%20pure%20white%20background%2C%20soft%20ambient%20shadows%2C%20generous%20negative%20space%2C%20no%20text%2C%20no%20logo%2C%20no%20screen%20interface&image_size=landscape_16_9"
+           alt="" width="1600" height="1000" fetchpriority="high" decoding="async">
     </div>
   </div>
 </section>
 
 <!-- ============ 功能 ============ -->
-<section class="sec" id="features">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="eyebrow">核心功能</span>
-      <h2 class="h2" style="margin-top:16px">想得到的，都给你做好了</h2>
-      <p class="lead">不是半成品 —— 从解析、下载到去水印，一条链路全部打通。</p>
+<section class="band grey" id="features">
+  <div class="band-pad col">
+    <div class="center">
+      <p class="eyebrow rv">核心功能</p>
+      <h2 class="h2 rv d-1" style="margin-top:14px">从解析到成片，<br>一条链路全打通。</h2>
     </div>
-
-    <div class="feat-grid">
-      <div class="card feat rv">
-        <div class="ic">01</div>
-        <b>粘贴即解析</b>
-        <p>复制分享链接回来，自动识别平台并展开短链。</p>
-      </div>
-      <div class="card feat rv d-1">
-        <div class="ic">02</div>
-        <b>画质任选</b>
-        <p>从 360P 到 4K 全档位可选，输出 MP4 / WebM。</p>
-      </div>
-      <div class="card feat rv d-2">
-        <div class="ic">03</div>
-        <b>多线程加速</b>
-        <p>8 路并行分片，最多 10 个任务同时下载。</p>
-      </div>
-      <div class="card feat rv d-3">
-        <div class="ic">04</div>
-        <b>图集批量存</b>
-        <p>图片帖一次全部保存，不用逐张点。</p>
-      </div>
+    <div class="trio">
+      <div class="rv"><div class="n">01</div><b>粘贴即解析</b><p>复制分享链接回来，自动识别平台，短链自动展开。</p></div>
+      <div class="rv d-1"><div class="n">02</div><b>画质任选</b><p>从 360P 到 4K 全档位可选，输出 MP4 或 WebM。</p></div>
+      <div class="rv d-2"><div class="n">03</div><b>多线程加速</b><p>8 路并行分片，最多 10 个任务同时下载。</p></div>
     </div>
   </div>
 </section>
 
 <!-- ============ 平台 ============ -->
-<section class="sec" id="platforms">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="eyebrow">支持平台</span>
-      <h2 class="h2" style="margin-top:16px">全网 21 个平台</h2>
-      <p class="lead">国内外主流短视频、长视频、图片社区都在名单里，并持续更新。</p>
+<section class="band white" id="platforms">
+  <div class="band-pad col">
+    <div class="center">
+      <p class="eyebrow rv">支持平台</p>
+      <h2 class="h2 rv d-1" style="margin-top:14px">21 个平台，<br>一个入口搞定。</h2>
+      <p class="lede rv d-2">短视频、长视频、音频与图片社区，持续更新。</p>
     </div>
-    <div class="tags rv d-1">
-      <span class="tag">YouTube</span><span class="tag">哔哩哔哩</span><span class="tag">抖音</span>
-      <span class="tag">TikTok</span><span class="tag">小红书</span><span class="tag">微博</span>
-      <span class="tag">快手</span><span class="tag">Instagram</span><span class="tag">X / Twitter</span>
-      <span class="tag">Facebook</span><span class="tag">西瓜视频</span><span class="tag">AcFun</span>
-      <span class="tag">喜马拉雅</span><span class="tag">Vimeo</span><span class="tag">Reddit</span>
-      <span class="tag">Pinterest</span><span class="tag">Tumblr</span><span class="tag">SoundCloud</span>
-      <span class="tag">Dailymotion</span><span class="tag">Bluesky</span><span class="tag">Telegram</span>
+    <div class="specs rv d-2">
+      <span>YouTube</span><span>哔哩哔哩</span><span>抖音</span><span>TikTok</span>
+      <span>小红书</span><span>微博</span><span>快手</span><span>Instagram</span>
+      <span>X / Twitter</span><span>Facebook</span><span>西瓜视频</span><span>AcFun</span>
+      <span>喜马拉雅</span><span>Vimeo</span><span>Reddit</span><span>Pinterest</span>
+      <span>Tumblr</span><span>SoundCloud</span><span>Dailymotion</span><span>Bluesky</span>
+      <span>Telegram</span><span class="more">持续更新中…</span>
     </div>
   </div>
 </section>
 
-<!-- ============ 去水印 ============ -->
-<section class="sec" id="watermark">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="eyebrow">去水印</span>
-      <h2 class="h2" style="margin-top:16px">水印，直接抹掉</h2>
-      <p class="lead">基于样例的图像修复逐帧填补 —— 拖动下面的滑块看对比。</p>
+<!-- ============ 去水印（深色通栏） ============ -->
+<section class="band dark" id="watermark">
+  <div class="band-pad col">
+    <div class="center">
+      <p class="eyebrow rv">去水印</p>
+      <h2 class="h2 rv d-1" style="margin-top:14px">水印，<br>直接抹掉。</h2>
+      <p class="lede rv d-2">基于样例的图像修复逐帧填补，不是遮挡，也不是模糊糊弄。</p>
     </div>
-
-    <div class="wm">
-      <div class="rv">
-        <div class="ba" id="ba" role="slider" aria-label="去水印前后对比，可左右拖动" tabindex="0">
-          <div class="ba-layer">
-            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20vertical%20video%20still%20of%20a%20young%20woman%20walking%20through%20a%20neon%20lit%20city%20street%20at%20night%2C%20vibrant%20magenta%20and%20blue%20lights%2C%20shallow%20depth%20of%20field%2C%20social%20media%20short%20video%20look%2C%20high%20quality%2C%20clean%20frame%2C%20no%20text%2C%20no%20logo%2C%20no%20watermark&image_size=portrait_16_9"
-                 alt="处理后的画面" width="1080" height="1920" loading="lazy" decoding="async">
-          </div>
-          <div class="ba-layer ba-before">
-            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20vertical%20video%20still%20of%20a%20young%20woman%20walking%20through%20a%20neon%20lit%20city%20street%20at%20night%2C%20vibrant%20magenta%20and%20blue%20lights%2C%20shallow%20depth%20of%20field%2C%20social%20media%20short%20video%20look%2C%20high%20quality%2C%20clean%20frame%2C%20no%20text%2C%20no%20logo%2C%20no%20watermark&image_size=portrait_16_9"
-                 alt="原片画面" width="1080" height="1920" loading="lazy" decoding="async">
-            <span class="ba-wm">@UP主 · 1080P</span>
-          </div>
-          <span class="ba-tag l">原片</span>
-          <span class="ba-tag r">处理后</span>
-          <div class="ba-hd"></div>
+    <div class="ba-wrap rv d-2">
+      <div class="ba" id="ba" role="slider" aria-label="去水印前后对比，可左右拖动" tabindex="0">
+        <div class="ba-layer">
+          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20vertical%20video%20still%20of%20a%20young%20woman%20walking%20through%20a%20neon%20lit%20city%20street%20at%20night%2C%20vibrant%20magenta%20and%20blue%20lights%2C%20shallow%20depth%20of%20field%2C%20social%20media%20short%20video%20look%2C%20high%20quality%2C%20clean%20frame%2C%20no%20text%2C%20no%20logo%2C%20no%20watermark&image_size=portrait_16_9"
+               alt="处理后的画面" width="1080" height="1920" loading="lazy" decoding="async">
         </div>
-      </div>
-
-      <div class="card wm-card rv d-1">
-        <div class="row"><span class="n">01</span><div><b>图片 / 视频都支持</b><p>逐帧修复填补，保留原始画质与纹理细节。</p></div></div>
-        <div class="row"><span class="n">02</span><div><b>会动的水印也能跟</b><p>特征追踪 + 运动预测，水印移动时逐帧锁定。</p></div></div>
-        <div class="row"><span class="n">03</span><div><b>批量处理，音轨不动</b><p>多段排队后台跑；只重编码画面，音轨原样拷贝。</p></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 数字 ============ -->
-<section class="sec" id="speed">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="eyebrow">下载能力</span>
-      <h2 class="h2" style="margin-top:16px">快，是有原因的</h2>
-      <p class="lead">从连接到落盘，整条链路都按「争分夺秒」设计。</p>
-    </div>
-    <div class="stats">
-      <div class="card stat rv"><div class="v"><span data-count="8">0</span><em>路</em></div><div class="k">并行分片</div><div class="d">突破单连接限速</div></div>
-      <div class="card stat rv d-1"><div class="v"><span data-count="10">0</span><em>个</em></div><div class="k">同时下载</div><div class="d">并发数可调</div></div>
-      <div class="card stat rv d-2"><div class="v"><span data-count="4">0</span><em>K</em></div><div class="k">最高清晰度</div><div class="d">360P – 4K</div></div>
-      <div class="card stat rv d-3"><div class="v"><span data-count="100">0</span><em>%</em></div><div class="k">断点续传</div><div class="d">断了也能接着下</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 本地解析 ============ -->
-<section class="sec" id="privacy">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="eyebrow">隐私 · 本地</span>
-      <h2 class="h2" style="margin-top:16px">解析发生在你的手机里</h2>
-      <p class="lead">不需要把链接发到任何第三方服务器，视频与合成文件全程只走本机存储。</p>
-    </div>
-    <div class="steps">
-      <div class="card step rv"><div class="n">1</div><b>粘贴链接</b><p>自动识别平台，短链自动展开。</p></div>
-      <div class="card step rv d-1"><div class="n">2</div><b>本机解析</b><p>内置引擎在本地拿到原始直链。</p></div>
-      <div class="card step rv d-2"><div class="n">3</div><b>落盘保存</b><p>DASH 音视频无损合成后入库。</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 结尾 ============ -->
-<section class="sec" id="download" style="padding-top:0">
-  <div class="wrap">
-    <div class="cta rv">
-      <div class="cta-in">
-        <h2>现在就把链接，变成你手机里的文件。</h2>
-        <p>下载后直接覆盖安装，保存进度不受影响。</p>
-        <div class="cta-row">
-          <a class="btn btn-white" href="VideoDownloader-v1.9.45.apk" download>
-            下载番茄大王 APK
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
-          </a>
-          <a class="btn btn-soft" href="#top" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.55)">回到顶部</a>
+        <div class="ba-layer ba-before">
+          <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20vertical%20video%20still%20of%20a%20young%20woman%20walking%20through%20a%20neon%20lit%20city%20street%20at%20night%2C%20vibrant%20magenta%20and%20blue%20lights%2C%20shallow%20depth%20of%20field%2C%20social%20media%20short%20video%20look%2C%20high%20quality%2C%20clean%20frame%2C%20no%20text%2C%20no%20logo%2C%20no%20watermark&image_size=portrait_16_9"
+               alt="原片画面" width="1080" height="1920" loading="lazy" decoding="async">
+          <span class="ba-wm">@UP主 · 1080P</span>
         </div>
-        <div class="cta-file">VideoDownloader-v1.9.45.apk ｜ 约 31 MB ｜ Android 8.0+</div>
+        <span class="ba-tag l">原片</span>
+        <span class="ba-tag r">处理后</span>
+        <div class="ba-hd"></div>
       </div>
     </div>
+    <p class="ba-hint rv">← 左右拖动查看对比 →</p>
+
+    <div class="trio">
+      <div class="rv"><div class="n">01</div><b>图片 / 视频都支持</b><p>逐帧修复填补，保留原始画质与纹理细节。</p></div>
+      <div class="rv d-1"><div class="n">02</div><b>会动的水印也能跟</b><p>特征追踪 + 运动预测，水印移动时逐帧锁定位置。</p></div>
+      <div class="rv d-2"><div class="n">03</div><b>批量处理，音轨不动</b><p>多段排队后台跑；只重编码画面，音轨原样拷贝。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 速度 ============ -->
+<section class="band grey" id="speed">
+  <div class="band-pad col">
+    <div class="center">
+      <p class="eyebrow rv">下载能力</p>
+      <h2 class="h2 rv d-1" style="margin-top:14px">快，是有原因的。</h2>
+      <p class="lede rv d-2">从连接到落盘，整条链路都按「争分夺秒」设计。</p>
+    </div>
+    <div class="numbers">
+      <div class="num rv"><div class="v"><span data-count="8">0</span><em>路</em></div><div class="k">并行分片</div><div class="d">突破单连接限速</div></div>
+      <div class="num rv d-1"><div class="v"><span data-count="10">0</span><em>个</em></div><div class="k">同时下载</div><div class="d">并发数可调</div></div>
+      <div class="num rv d-2"><div class="v"><span data-count="4">0</span><em>K</em></div><div class="k">最高清晰度</div><div class="d">360P – 4K</div></div>
+      <div class="num rv d-3"><div class="v"><span data-count="100">0</span><em>%</em></div><div class="k">断点续传</div><div class="d">断了也能接着下</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 隐私 ============ -->
+<section class="band white" id="privacy">
+  <div class="band-pad col">
+    <div class="center">
+      <p class="eyebrow rv">隐私 · 本地</p>
+      <h2 class="h2 rv d-1" style="margin-top:14px">解析发生在<br>你的手机里。</h2>
+      <p class="lede rv d-2">不需要把链接发到任何第三方服务器，视频与合成文件全程只走本机存储。</p>
+    </div>
+  </div>
+  <div class="col-w">
+    <div class="art rv d-2" style="margin-top:clamp(28px,4vh,52px)">
+      <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=beautiful%20flat%20vector%20illustration%20of%20a%20smartphone%20with%20a%20glowing%20shield%20and%20a%20padlock%2C%20data%20staying%20safely%20inside%20the%20phone%2C%20soft%20concentric%20circles%20and%20small%20abstract%20elements%20around%20it%2C%20warm%20red%20coral%20and%20soft%20peach%20palette%2C%20clean%20minimal%20editorial%20illustration%20style%2C%20pure%20white%20background%2C%20soft%20ambient%20shadows%2C%20generous%20negative%20space%2C%20no%20text%2C%20no%20logo&image_size=landscape_16_9"
+           alt="" width="1600" height="1000" loading="lazy" decoding="async">
+    </div>
+  </div>
+  <div class="band-pad-tight col">
+    <div class="trio">
+      <div class="rv"><div class="n">STEP 1</div><b>粘贴链接</b><p>自动识别平台，短链自动展开。</p></div>
+      <div class="rv d-1"><div class="n">STEP 2</div><b>本机解析</b><p>内置引擎在本地拿到原始直链。</p></div>
+      <div class="rv d-2"><div class="n">STEP 3</div><b>落盘保存</b><p>DASH 音视频无损合成后入库。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 下载 ============ -->
+<section class="band dark" id="download">
+  <div class="band-pad col center">
+    <h2 class="cta-title rv">现在就把链接，<br>变成你手机里的文件。</h2>
+    <p class="lede rv d-1">下载后直接覆盖安装，保存进度不受影响。</p>
+    <div class="cta-row rv d-2">
+      <a class="btn btn-red" href="VideoDownloader-v1.9.45.apk" download>下载番茄大王 APK</a>
+      <a class="btn btn-line light link" href="#top">回到顶部 <span class="arrow">›</span></a>
+    </div>
+    <p class="filename rv d-2">VideoDownloader-v1.9.45.apk　·　约 31 MB　·　Android 8.0+</p>
   </div>
 </section>
 
 <footer class="ft">
-  <a class="brand" href="#top">
-    <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
-      <rect width="48" height="48" rx="14" fill="#FF4B3E"/>
-      <circle cx="24" cy="29" r="13" fill="#fff" opacity=".96"/>
-      <path d="M24 15c-1.9-2.9-5-4.3-7.7-4 .6 2.7 2.4 5 5.1 6-1.1-.2-2.3-.2-3.4 0 1.6 1.9 3.9 2.9 6 2.6 2.1.3 4.4-.7 6-2.6-1.1-.2-2.3-.2-3.4 0 2.7-1 4.5-3.3 5.1-6-2.7-.3-5.8 1.1-7.7 4z" fill="#3FA05A"/>
-    </svg>
-    <b>番茄大王</b>
-  </a>
-  <span>v1.9.45 ｜ com.videodownloader.app</span>
-  <span>© 2026 番茄大王</span>
+  <div class="ft-in">
+    <a class="brand" href="#top">
+      <svg class="mark" viewBox="0 0 48 48" aria-hidden="true" style="width:20px;height:20px;border-radius:6px">
+        <rect width="48" height="48" rx="14" fill="#FF4433"/>
+        <circle cx="24" cy="29" r="13" fill="#fff"/>
+        <path d="M24 15c-1.9-2.9-5-4.3-7.7-4 .6 2.7 2.4 5 5.1 6-1.1-.2-2.3-.2-3.4 0 1.6 1.9 3.9 2.9 6 2.6 2.1.3 4.4-.7 6-2.6-1.1-.2-2.3-.2-3.4 0 2.7-1 4.5-3.3 5.1-6-2.7-.3-5.8 1.1-7.7 4z" fill="#3FA05A"/>
+      </svg>
+      <b>番茄大王</b>
+    </a>
+    <span>v1.9.45 ｜ com.videodownloader.app</span>
+    <span>© 2026 番茄大王</span>
+  </div>
 </footer>
 
 <div class="dock" id="dock">
-  <a class="btn btn-red" href="VideoDownloader-v1.9.45.apk" download>
-    下载番茄大王 APK <span>· 31 MB</span>
-  </a>
+  <a class="btn btn-red" href="VideoDownloader-v1.9.45.apk" download>下载番茄大王 APK <span>· 31 MB</span></a>
 </div>
 
 <script>
 (function () {
   'use strict';
-  var hdr = document.getElementById('hdr');
-  var hero = document.getElementById('top');
+  var nav = document.getElementById('nav');
   var dock = document.getElementById('dock');
+  var hero = document.getElementById('top');
   var cta = document.getElementById('download');
   var ticking = false;
 
@@ -487,7 +415,12 @@ section[id]{scroll-margin-top:calc(var(--hdr) + var(--st) + 20px)}
     ticking = true;
     requestAnimationFrame(function () {
       var y = window.scrollY || window.pageYOffset || 0;
-      if (hdr) hdr.classList.toggle('solid', y > 10);
+      if (nav) {
+        nav.classList.toggle('solid', y > 8);
+        var mid = document.elementFromPoint(window.innerWidth / 2, window.innerHeight * 0.5);
+        var dark = mid && mid.closest && mid.closest('.band.dark');
+        nav.classList.toggle('on-dark', !!dark);
+      }
       if (dock && hero) {
         var nearCta = cta && cta.getBoundingClientRect().top < window.innerHeight * 0.9;
         var show = y > (hero.offsetHeight || 1) * 0.5 && !nearCta;
@@ -505,7 +438,7 @@ section[id]{scroll-margin-top:calc(var(--hdr) + var(--st) + 20px)}
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { threshold: 0.1, rootMargin: '0px 0px -4% 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
     items.forEach(function (el) { io.observe(el); });
     setTimeout(function () {
       items.forEach(function (el) {
@@ -518,7 +451,7 @@ section[id]{scroll-margin-top:calc(var(--hdr) + var(--st) + 20px)}
 
   var nums = document.querySelectorAll('[data-count]');
   function count(el) {
-    var to = parseInt(el.getAttribute('data-count'), 10) || 0, dur = 950, t0 = performance.now();
+    var to = parseInt(el.getAttribute('data-count'), 10) || 0, dur = 1000, t0 = performance.now();
     (function tick(now) {
       var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.round(to * e);
