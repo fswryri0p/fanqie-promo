@@ -6,36 +6,37 @@
 <meta name="color-scheme" content="light" />
 <title>番茄大王 · 一个链接，存下全网视频</title>
 <meta name="description" content="番茄大王 —— Android 端视频下载与去水印工具。21 个平台、4K 原画、8 路并行分片、音视频无损合成，解析完全在本地完成。" />
-<meta name="theme-color" content="#EFEFF2" />
+<meta name="theme-color" content="#F7F7FA" />
 <script>document.documentElement.classList.add('js')</script>
 <style>
 /* ==================================================================
-   番茄大王 · Bento 拼贴网格
-   所有内容压进一个自适应网格，不做逐屏叙事
+   番茄大王 · 无外部依赖设计（插画全部为内联 SVG）
    ================================================================== */
 :root{
-  --page:#EFEFF2;
-  --tile:#FFFFFF;
-  --ink:#0E0E11;
-  --ink-2:#2C2C33;
-  --muted:#71717A;
-  --red:#FF3B2F;
-  --red-2:#D92A1E;
-  --lime:#C8F169;
+  --bg:#F7F7FA;
+  --card:#FFFFFF;
+  --ink:#101014;
+  --ink-2:#33333C;
+  --muted:#6C6C7A;
+  --red:#FF3B30;
+  --red-2:#DC2A20;
+  --orange:#FF8A3D;
   --violet:#7C5CFF;
-  --line:rgba(14,14,17,.09);
+  --teal:#18C7AC;
+  --line:rgba(16,16,20,.09);
+  --line-2:rgba(16,16,20,.055);
+  --shadow:0 24px 60px -34px rgba(16,16,20,.28);
 
   --sans:-apple-system, BlinkMacSystemFont, "PingFang SC", "HarmonyOS Sans SC",
          "MiSans", "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei",
          system-ui, "Segoe UI", Roboto, sans-serif;
   --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --pad:clamp(14px,3.6vw,44px);
-  --gap:clamp(10px,1.4vw,16px);
-  --r:26px;
-  --maxw:1240px;
+  --pad:clamp(18px,4.6vw,64px);
+  --maxw:1180px;
+  --nav:64px;
+  --r:24px;
   --ease:cubic-bezier(.19,1,.22,1);
-
   --st:env(safe-area-inset-top,0px);
   --sb:env(safe-area-inset-bottom,0px);
   --sl:env(safe-area-inset-left,0px);
@@ -43,344 +44,549 @@
 }
 
 *,*::before,*::after{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;
+  scroll-padding-top:calc(var(--nav) + var(--st) + 20px)}
 html,body{margin:0;padding:0}
-body{background:var(--page);color:var(--ink);font-family:var(--sans);
-  line-height:1.5;letter-spacing:-.012em;overflow-x:hidden;
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);
+  line-height:1.55;letter-spacing:-.012em;overflow-x:hidden;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   -webkit-tap-highlight-color:transparent}
-img{display:block;max-width:100%;-webkit-user-drag:none}
+svg{display:block}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--red);color:#fff}
-:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:12px}
-h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.035em;line-height:1.08}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:10px}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.035em;line-height:1.1}
 p{margin:0}
+section[id]{scroll-margin-top:calc(var(--nav) + var(--st) + 20px)}
+.wrap{max-width:var(--maxw);margin:0 auto;
+  padding-left:max(var(--pad),var(--sl));padding-right:max(var(--pad),var(--sr))}
 
-/* ---------------- 顶栏（极简，一条） ---------------- */
-.top{position:sticky;top:0;z-index:60;
-  padding:calc(10px + var(--st)) max(var(--pad),var(--sr)) 10px max(var(--pad),var(--sl));
-  background:rgba(239,239,242,.78);
-  backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%)}
-.top-in{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;
-  justify-content:space-between;gap:14px}
-.brand{display:flex;align-items:center;gap:9px;min-width:0}
-.brand .mark{width:30px;height:30px;border-radius:9px;flex:0 0 auto}
-.brand b{font-size:16.5px;font-weight:800;letter-spacing:-.035em;white-space:nowrap}
-.top-meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.04em}
-@media (max-width:700px){ .top-meta{display:none} }
+/* 装饰光斑（纯 CSS，无需图片） */
+.orb{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0}
 
 /* ---------------- 按钮 ---------------- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  min-height:50px;padding:14px 26px;border-radius:999px;border:1px solid transparent;
-  font-size:15.5px;font-weight:700;line-height:1;white-space:nowrap;cursor:pointer;
-  transition:transform .22s var(--ease), background .22s, color .22s, border-color .22s, box-shadow .22s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:52px;padding:15px 28px;border-radius:999px;border:1px solid transparent;
+  cursor:pointer;font-size:16px;font-weight:700;line-height:1;white-space:nowrap;
+  transition:transform .24s var(--ease), box-shadow .24s var(--ease), background .24s, border-color .24s}
 .btn svg{width:17px;height:17px;flex:0 0 auto}
-.btn-dark{background:var(--ink);color:#fff}
-.btn-red{background:var(--red);color:#fff}
-.btn-line{border-color:var(--line);background:#fff;color:var(--ink)}
-.btn-sm{min-height:40px;padding:10px 18px;font-size:14px}
-.btn:active{transform:scale(.985)}
+.btn-red{background:linear-gradient(135deg,#FF5A4E,#E0362A);color:#fff;
+  box-shadow:0 14px 30px -12px rgba(255,59,48,.75)}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+.btn-sm{min-height:42px;padding:10px 20px;font-size:14px}
+.btn:active{transform:translateY(1px) scale(.99)}
 @media (hover:hover){
-  .btn-dark:hover{background:#000;transform:translateY(-2px)}
-  .btn-red:hover{background:var(--red-2);transform:translateY(-2px)}
-  .btn-line:hover{border-color:rgba(14,14,17,.28);transform:translateY(-2px)}
+  .btn-red:hover{transform:translateY(-2px);box-shadow:0 22px 40px -14px rgba(255,59,48,.9)}
+  .btn-ghost:hover{transform:translateY(-2px);border-color:rgba(16,16,20,.22)}
 }
 
-/* ==================================================================
-   Bento 网格
-   ================================================================== */
-.bento{max-width:var(--maxw);margin:0 auto;
-  padding:var(--gap) max(var(--pad),var(--sr)) calc(var(--gap) + var(--sb)) max(var(--pad),var(--sl));
-  display:grid;gap:var(--gap);
-  grid-template-columns:repeat(1,minmax(0,1fr));
-  grid-auto-flow:dense}
-@media (min-width:720px){ .bento{grid-template-columns:repeat(2,minmax(0,1fr))} }
-@media (min-width:1020px){ .bento{grid-template-columns:repeat(4,minmax(0,1fr))} }
+/* ---------------- 顶栏 ---------------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:80;min-height:var(--nav);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:calc(10px + var(--st)) max(var(--pad),var(--sr)) 10px max(var(--pad),var(--sl));
+  transition:background .35s, box-shadow .35s, backdrop-filter .35s}
+.nav.solid{background:rgba(247,247,250,.82);
+  backdrop-filter:blur(20px) saturate(170%);-webkit-backdrop-filter:blur(20px) saturate(170%);
+  box-shadow:0 1px 0 var(--line-2)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand svg{width:32px;height:32px;flex:0 0 auto}
+.brand b{font-size:17.5px;font-weight:800;letter-spacing:-.035em;white-space:nowrap}
+.nav-links{display:flex;gap:26px;font-size:14.5px;color:var(--muted);font-weight:600}
+@media (hover:hover){ .nav-links a:hover{color:var(--ink)} }
+@media (max-width:940px){ .nav-links{display:none} }
+@media (max-width:430px){ .brand b{font-size:16px} .nav .btn{padding:9px 15px;font-size:13px;min-height:38px} }
 
-.tile{position:relative;overflow:hidden;border-radius:var(--r);
-  background:var(--tile);border:1px solid var(--line);
-  display:flex;flex-direction:column;
+/* ---------------- 首屏 ---------------- */
+.hero{position:relative;overflow:hidden;
+  padding-top:calc(var(--nav) + var(--st) + clamp(30px,6vh,72px));
+  padding-bottom:clamp(40px,6vh,80px)}
+.hero .orb.a{width:min(560px,88vw);height:min(560px,88vw);top:-14%;right:-14%;
+  background:radial-gradient(circle,rgba(255,59,48,.22),transparent 68%)}
+.hero .orb.b{width:min(480px,80vw);height:min(480px,80vw);top:24%;left:-18%;
+  background:radial-gradient(circle,rgba(124,92,255,.20),transparent 68%)}
+.hero-grid{position:relative;z-index:1;display:grid;gap:clamp(30px,5vw,56px);align-items:center}
+@media (min-width:900px){ .hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)} }
+.tag{display:inline-flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;
+  background:#fff;border:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink-2);
+  box-shadow:0 6px 18px -12px rgba(16,16,20,.4)}
+.tag i{width:7px;height:7px;border-radius:50%;background:var(--teal);flex:0 0 auto;
+  box-shadow:0 0 0 4px rgba(24,199,172,.18)}
+.hero h1{margin-top:20px;font-size:clamp(38px,10.6vw,68px);letter-spacing:-.05em;line-height:1.03}
+@media (min-width:900px){ .hero h1{font-size:clamp(46px,4.6vw,68px)} }
+.gr{background:linear-gradient(120deg,#FF3B30,#FF8A3D 62%,#FFB03D);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lede{margin-top:20px;color:var(--muted);font-size:clamp(15px,1.7vw,17.5px);max-width:32ch}
+.hero-cta{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}
+.hero-facts{margin-top:26px;display:flex;gap:8px 20px;flex-wrap:wrap;font-size:13.5px;color:var(--muted)}
+.hero-facts span{display:inline-flex;align-items:center;gap:7px}
+.hero-facts svg{width:15px;height:15px;color:var(--red)}
+.hero-art{position:relative}
+.hero-art > svg{width:100%;height:auto}
+
+/* ---------------- 通用区块 ---------------- */
+.sec{padding:clamp(56px,9vh,112px) 0}
+.head{text-align:center;max-width:620px;margin:0 auto}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--red-2)}
+.sec h2{margin-top:14px;font-size:clamp(27px,5.8vw,46px)}
+.sec .lead{margin-top:16px;color:var(--muted);font-size:clamp(15px,1.6vw,17px)}
+
+.cards{margin-top:clamp(30px,5vw,48px);display:grid;gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:26px 22px;box-shadow:var(--shadow);
   transition:transform .3s var(--ease), box-shadow .3s var(--ease)}
-@media (hover:hover){ .tile:hover{transform:translateY(-3px);box-shadow:0 22px 44px -28px rgba(14,14,17,.35)} }
-.tile .pad{padding:clamp(20px,2.4vw,30px);display:flex;flex-direction:column;height:100%}
+@media (hover:hover){ .card:hover{transform:translateY(-4px)} }
+.card .ic{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#FFF0ED,#FFE3DC);border:1px solid rgba(255,59,48,.14)}
+.card b{display:block;margin-top:16px;font-size:17.5px;font-weight:800;letter-spacing:-.025em}
+.card p{margin-top:8px;color:var(--muted);font-size:14.5px}
 
-/* 展开规则 */
-@media (min-width:720px){
-  .t-hero{grid-column:span 2}
-  .t-wide{grid-column:span 2}
-}
-@media (min-width:1020px){
-  .t-hero{grid-column:span 2;grid-row:span 2}
-  .t-wide{grid-column:span 2}
-  .t-full{grid-column:span 4}
-  .t-tall{grid-row:span 2}
-}
-
-/* ---------------- 主瓦片 ---------------- */
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);
-  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
-.t-hero h1{margin-top:14px;font-size:clamp(34px,9.4vw,58px);letter-spacing:-.045em;line-height:1.02}
-@media (min-width:1020px){ .t-hero h1{font-size:clamp(40px,3.6vw,58px)} }
-.t-hero .lede{margin-top:16px;color:var(--muted);font-size:clamp(14.5px,1.6vw,16.5px);max-width:34ch}
-.t-hero .acts{margin-top:auto;padding-top:24px;display:flex;gap:10px;flex-wrap:wrap}
-.hero-figure{margin-top:22px;border-radius:18px;overflow:hidden;background:#F6F6F8}
-.hero-figure img{width:100%;height:auto;aspect-ratio:16/10;object-fit:contain}
-
-/* ---------------- 数据瓦片 ---------------- */
-.t-stat .pad{justify-content:space-between;gap:16px;min-height:150px}
-.t-stat .v{font-family:var(--mono);font-size:clamp(34px,7.4vw,46px);font-weight:700;
-  line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
-.t-stat .v em{font-style:normal;font-size:.4em;color:var(--red);margin-left:3px}
-.t-stat .k{font-size:14.5px;font-weight:700}
-.t-stat .d{margin-top:3px;font-size:12.5px;color:var(--muted)}
-.t-stat.ink{background:var(--ink);border-color:transparent;color:#fff}
-.t-stat.ink .v em{color:var(--lime)}
-.t-stat.ink .d{color:rgba(255,255,255,.55)}
-.t-stat.red{background:var(--red);border-color:transparent;color:#fff}
-.t-stat.red .v em{color:#FFE08A}
-.t-stat.red .d{color:rgba(255,255,255,.7)}
-
-/* ---------------- 去水印瓦片 ---------------- */
-.t-wm .head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
-.t-wm h2{font-size:clamp(22px,3.2vw,30px)}
-.t-wm .note{font-size:13px;color:var(--muted)}
-.wm-body{margin-top:20px;display:grid;gap:18px;align-items:center}
-@media (min-width:640px){ .wm-body{grid-template-columns:minmax(0,.8fr) minmax(0,1fr)} }
-.ba{position:relative;width:100%;max-width:300px;margin:0 auto;aspect-ratio:3/4;
-  border-radius:18px;overflow:hidden;background:#111;
-  touch-action:pan-y;-webkit-user-select:none;user-select:none;
-  -webkit-touch-callout:none;cursor:ew-resize;--pos:58%}
-.ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
-.ba-layer{position:absolute;inset:0}
-.ba-before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
-.ba-wm{position:absolute;right:10%;bottom:14%;padding:6px 12px;border-radius:9px;
-  background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.22);color:#fff;
-  font-size:12px;font-weight:600}
-.ba-tag{position:absolute;top:12px;padding:5px 12px;border-radius:999px;
-  font-size:11px;font-weight:800}
-.ba-tag.l{left:12px;background:rgba(255,255,255,.94);color:var(--ink)}
-.ba-tag.r{right:12px;background:var(--red);color:#fff}
-.ba-hd{position:absolute;top:0;bottom:0;left:var(--pos);width:2.5px;transform:translateX(-1px);
-  background:#fff;box-shadow:0 0 12px rgba(0,0,0,.45)}
-.ba-hd::after{content:"";position:absolute;top:50%;left:50%;width:50px;height:50px;
-  transform:translate(-50%,-50%);border-radius:50%;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.35);
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' viewBox='0 0 50 50'%3E%3Cpath d='M20 17l-5 8 5 8M30 17l5 8-5 8' stroke='%23FF3B2F' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+/* ---------------- 去水印（纯 SVG 场景，无图片） ---------------- */
+.wm-wrap{margin-top:clamp(30px,5vw,48px);display:grid;gap:24px;align-items:center}
+@media (min-width:900px){ .wm-wrap{grid-template-columns:minmax(0,.85fr) minmax(0,1fr)} }
+.ba{position:relative;width:100%;max-width:340px;margin:0 auto;aspect-ratio:3/4;
+  border-radius:22px;overflow:hidden;background:#0C0A18;
+  box-shadow:0 34px 70px -34px rgba(16,16,20,.6), 0 0 0 1px var(--line);
+  touch-action:pan-y;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  cursor:ew-resize;--pos:58%}
+.ba .layer{position:absolute;inset:0}
+.ba .layer > svg{width:100%;height:100%}
+.ba .before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba .wm-mark{position:absolute;right:9%;bottom:13%;display:flex;align-items:center;gap:7px;
+  padding:7px 13px;border-radius:10px;background:rgba(0,0,0,.42);
+  border:1px solid rgba(255,255,255,.22);color:#fff;font-size:12.5px;font-weight:600;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ba .wm-mark i{width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#FF5A4E,#E0362A);display:block}
+.ba-tag{position:absolute;top:13px;padding:6px 13px;border-radius:999px;font-size:11.5px;font-weight:800}
+.ba-tag.l{left:13px;background:rgba(255,255,255,.94);color:var(--ink)}
+.ba-tag.r{right:13px;background:var(--red);color:#fff}
+.ba-hd{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;transform:translateX(-1.5px);
+  background:#fff;box-shadow:0 0 14px rgba(255,255,255,.75)}
+.ba-hd::after{content:"";position:absolute;top:50%;left:50%;width:52px;height:52px;
+  transform:translate(-50%,-50%);border-radius:50%;background:#fff;box-shadow:0 8px 22px rgba(0,0,0,.35);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='52' viewBox='0 0 52 52'%3E%3Cpath d='M21 18l-5 8 5 8M31 18l5 8-5 8' stroke='%23FF3B30' stroke-width='2.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:center}
-.wm-points{display:grid;gap:14px}
-.wm-points div{display:flex;gap:12px}
-.wm-points .n{flex:0 0 26px;height:26px;border-radius:9px;background:#F0F0F3;
-  display:grid;place-items:center;font-family:var(--mono);font-size:11.5px;font-weight:800;color:var(--red-2)}
-.wm-points b{display:block;font-size:15px;font-weight:800}
-.wm-points p{font-size:13.5px;color:var(--muted);margin-top:2px}
+.wm-list{display:grid;gap:16px}
+.wm-item{display:flex;gap:14px;background:#fff;border:1px solid var(--line);
+  border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.wm-item .n{flex:0 0 32px;height:32px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#FFF0ED,#FFE3DC);font-family:var(--mono);
+  font-size:12.5px;font-weight:800;color:var(--red-2)}
+.wm-item b{display:block;font-size:16px;font-weight:800}
+.wm-item p{margin-top:4px;color:var(--muted);font-size:14px}
 
-/* ---------------- 平台瓦片 ---------------- */
-.t-plat .tags{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
-.t-plat .tag{padding:9px 15px;border-radius:999px;background:#F4F4F6;
-  font-size:13.5px;font-weight:700;color:var(--ink-2)}
-.t-plat .tag.more{background:var(--red);color:#fff}
+/* ---------------- 平台 ---------------- */
+.tags{margin-top:clamp(28px,4vw,42px);display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.tag2{display:inline-flex;align-items:center;gap:8px;padding:10px 17px;border-radius:999px;
+  background:#fff;border:1px solid var(--line);font-size:14px;font-weight:700;color:var(--ink-2);
+  transition:transform .22s var(--ease), border-color .22s, color .22s}
+.tag2 svg{width:14px;height:14px;flex:0 0 auto}
+@media (hover:hover){ .tag2:hover{transform:translateY(-3px);border-color:rgba(255,59,48,.4);color:var(--red-2)} }
 
-/* ---------------- 隐私瓦片 ---------------- */
-.t-priv{background:var(--ink);border-color:transparent;color:#fff}
-.t-priv h2{font-size:clamp(22px,3.2vw,30px)}
-.t-priv .lead{margin-top:12px;color:rgba(255,255,255,.62);font-size:14.5px}
-.t-priv .steps{margin-top:auto;padding-top:22px;display:grid;gap:10px}
-@media (min-width:520px){ .t-priv .steps{grid-template-columns:repeat(3,1fr);gap:14px} }
-.t-priv .step{border-top:1px solid rgba(255,255,255,.16);padding-top:12px}
-.t-priv .step .d{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--lime)}
-.t-priv .step b{display:block;margin-top:7px;font-size:15px;font-weight:800}
-.t-priv .step p{font-size:13px;color:rgba(255,255,255,.55);margin-top:2px}
+/* ---------------- 数字 ---------------- */
+.nums{margin-top:clamp(30px,5vw,48px);display:grid;gap:16px;grid-template-columns:repeat(2,1fr)}
+@media (min-width:820px){ .nums{grid-template-columns:repeat(4,1fr)} }
+.nums .card{text-align:center;padding:30px 18px}
+.nums .v{font-family:var(--mono);font-size:clamp(34px,7.6vw,50px);font-weight:700;line-height:1;
+  letter-spacing:-.05em;font-variant-numeric:tabular-nums;
+  background:linear-gradient(160deg,#FF3B30,#FF8A3D);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.nums .v em{font-style:normal;font-size:.4em;margin-left:2px}
+.nums .k{margin-top:12px;font-size:16px;font-weight:800}
+.nums .d{margin-top:4px;font-size:13.5px;color:var(--muted)}
 
-/* ---------------- 结尾瓦片 ---------------- */
-.t-cta{background:linear-gradient(118deg,var(--red),#FF6B3D 58%,#FF9A3D);
-  border-color:transparent;color:#fff}
-.t-cta .pad{flex-direction:row;align-items:center;justify-content:space-between;gap:22px;flex-wrap:wrap}
-.t-cta h2{font-size:clamp(22px,3.4vw,34px);letter-spacing:-.04em;max-width:18em}
-.t-cta .meta{margin-top:8px;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.78)}
-.t-cta .acts{display:flex;gap:10px;flex-wrap:wrap}
-.t-cta .btn{background:#fff;color:var(--red-2)}
-@media (hover:hover){ .t-cta .btn:hover{transform:translateY(-2px)} }
+/* ---------------- 结尾 ---------------- */
+.cta{margin-top:clamp(20px,4vh,44px);position:relative;overflow:hidden;border-radius:28px;
+  background:linear-gradient(135deg,#141419,#26262F 70%);color:#fff;
+  padding:clamp(42px,7vh,72px) clamp(24px,5vw,60px);
+  box-shadow:0 30px 70px -34px rgba(16,16,20,.6)}
+.cta::after{content:"";position:absolute;top:-46%;right:-12%;width:min(440px,80vw);height:min(440px,80vw);
+  border-radius:50%;background:radial-gradient(circle,rgba(255,59,48,.34),transparent 68%);pointer-events:none}
+.cta-in{position:relative;z-index:1;display:flex;align-items:center;
+  justify-content:space-between;gap:24px;flex-wrap:wrap}
+.cta h2{font-size:clamp(24px,4.4vw,40px);letter-spacing:-.045em;max-width:18em}
+.cta .meta{margin-top:10px;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.6)}
+.cta .acts{display:flex;gap:12px;flex-wrap:wrap}
+.cta .btn-white{background:#fff;color:var(--ink)}
 
 /* ---------------- 页脚 ---------------- */
 .ft{max-width:var(--maxw);margin:0 auto;
-  padding:6px max(var(--pad),var(--sr)) calc(30px + var(--sb)) max(var(--pad),var(--sl));
-  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.03em}
+  padding:34px max(var(--pad),var(--sr)) calc(34px + var(--sb)) max(var(--pad),var(--sl));
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:12px;color:var(--muted)}
 
-/* ---------------- 底部常驻下载条 ---------------- */
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;
+/* ---------------- 移动端下载条 ---------------- */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:75;display:none;
   padding:10px max(var(--pad),var(--sr)) calc(10px + var(--sb)) max(var(--pad),var(--sl));
-  background:rgba(239,239,242,.9);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-top:1px solid var(--line);
+  background:rgba(247,247,250,.9);
+  backdrop-filter:blur(20px) saturate(170%);-webkit-backdrop-filter:blur(20px) saturate(170%);
+  box-shadow:0 -1px 0 var(--line-2);
   transform:translateY(130%);transition:transform .45s var(--ease)}
 .dock.show{transform:none}
 .dock .btn{width:100%}
-@media (max-width:900px){ .dock{display:block} body.docked .ft{padding-bottom:80px} }
+@media (max-width:900px){ .dock{display:block} body.docked .ft{padding-bottom:84px} }
 
 /* ---------------- 动效 ---------------- */
-.js .tile{opacity:0;transform:translateY(18px) scale(.985);
-  transition:opacity .7s var(--ease), transform .7s var(--ease), box-shadow .3s var(--ease)}
-.js .tile.in{opacity:1;transform:none}
+.js .rv{opacity:0;transform:translateY(24px);
+  transition:opacity .8s var(--ease), transform .8s var(--ease)}
+.js .rv.in{opacity:1;transform:none}
+.rv.d-1{transition-delay:.08s}.rv.d-2{transition-delay:.16s}.rv.d-3{transition-delay:.24s}
+.js .rise{opacity:0;transform:translateY(20px);animation:rise .85s var(--ease) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.d1{animation-delay:.06s}.d2{animation-delay:.16s}.d3{animation-delay:.26s}.d4{animation-delay:.36s}
 
 @media (prefers-reduced-motion:reduce){
-  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   html{scroll-behavior:auto}
-  .js .tile{opacity:1;transform:none}
+  .js .rv,.js .rise{opacity:1;transform:none}
 }
 </style>
 </head>
 <body>
 
-<div class="top">
-  <div class="top-in">
-    <a class="brand" href="#top">
-      <svg class="mark" viewBox="0 0 48 48" aria-hidden="true">
-        <rect width="48" height="48" rx="14" fill="#FF3B2F"/>
-        <circle cx="24" cy="29" r="13" fill="#fff"/>
-        <path d="M24 15c-1.9-2.9-5-4.3-7.7-4 .6 2.7 2.4 5 5.1 6-1.1-.2-2.3-.2-3.4 0 1.6 1.9 3.9 2.9 6 2.6 2.1.3 4.4-.7 6-2.6-1.1-.2-2.3-.2-3.4 0 2.7-1 4.5-3.3 5.1-6-2.7-.3-5.8 1.1-7.7 4z" fill="#3FA05A"/>
-      </svg>
-      <b>番茄大王</b>
-    </a>
-    <span class="top-meta">ANDROID 8.0+ ／ v1.9.45 ／ 完全免费</span>
-    <a class="btn btn-dark btn-sm" href="VideoDownloader-v1.9.45.apk" download>下载 APK</a>
+<!-- ===== 共用 SVG 资源（图标 / 插画），页面内联，无任何外链 ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF5A4E"/><stop offset="1" stop-color="#E0362A"/></linearGradient>
+    <linearGradient id="gWarm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF3B30"/><stop offset=".6" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FFB03D"/></linearGradient>
+    <linearGradient id="gViolet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8A6BFF"/><stop offset="1" stop-color="#5B3BE0"/></linearGradient>
+    <linearGradient id="gTeal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2ED9BC"/><stop offset="1" stop-color="#12A98F"/></linearGradient>
+    <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C24BFF"/><stop offset=".55" stop-color="#5B3BE0"/><stop offset="1" stop-color="#180F33"/></linearGradient>
+
+    <!-- 番茄 App 图标 -->
+    <symbol id="i-logo" viewBox="0 0 48 48">
+      <rect width="48" height="48" rx="14" fill="url(#gRed)"/>
+      <circle cx="24" cy="29.5" r="12.5" fill="#fff"/>
+      <path d="M24 15c-1.9-2.9-5-4.3-7.7-4 .6 2.7 2.4 5 5.1 6-1.1-.2-2.3-.2-3.4 0 1.6 1.9 3.9 2.9 6 2.6 2.1.3 4.4-.7 6-2.6-1.1-.2-2.3-.2-3.4 0 2.7-1 4.5-3.3 5.1-6-2.7-.3-5.8 1.1-7.7 4z" fill="#3FA05A"/>
+      <ellipse cx="19" cy="25" rx="3.4" ry="2.2" fill="#fff" opacity=".55" transform="rotate(-28 19 25)"/>
+    </symbol>
+
+    <!-- 功能图标 -->
+    <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7L12 19"/>
+    </symbol>
+    <symbol id="i-hd" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="3"/><path d="M7 9.5h3.2a1.6 1.6 0 010 3.2H7m0 0h3.2a1.6 1.6 0 010 3.2H7m0-6.4V16m7.2-6.5V16m0-3.4h3.3m0-3.1V16"/>
+    </symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13 2.5L4.5 13.5H11l-1 8 8.5-11H12z"/>
+    </symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/>
+      <rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2.8l7.5 3v6c0 4.6-3.2 7.9-7.5 9.3-4.3-1.4-7.5-4.7-7.5-9.3v-6z"/><path d="M9 12l2.2 2.2L15.4 10"/>
+    </symbol>
+    <symbol id="i-free" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"/><path d="M8.2 16.2l7.6-8.4M9.6 10.2h.01M14.4 13.8h.01"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 6.5L9.2 17.3 4 12.1"/>
+    </symbol>
+    <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/>
+    </symbol>
+
+    <!-- 去水印场景：竖版夜城（纯矢量绘制） -->
+    <symbol id="scene" viewBox="0 0 600 800">
+      <rect width="600" height="800" fill="#120C24"/>
+      <rect width="600" height="500" fill="url(#gSky)" opacity=".85"/>
+      <circle cx="430" cy="170" r="86" fill="#FF6BA8" opacity=".5"/>
+      <circle cx="430" cy="170" r="46" fill="#FFD3E6" opacity=".85"/>
+      <!-- 远景楼群 -->
+      <g fill="#2A1B4D">
+        <rect x="20" y="330" width="70" height="470" rx="6"/>
+        <rect x="105" y="270" width="58" height="530" rx="6"/>
+        <rect x="178" y="370" width="76" height="430" rx="6"/>
+        <rect x="268" y="300" width="62" height="500" rx="6"/>
+        <rect x="345" y="400" width="80" height="400" rx="6"/>
+        <rect x="440" y="340" width="66" height="460" rx="6"/>
+        <rect x="520" y="410" width="70" height="390" rx="6"/>
+      </g>
+      <!-- 霓虹窗格 -->
+      <g fill="#7BE3FF" opacity=".55">
+        <rect x="34" y="352" width="10" height="16" rx="2"/><rect x="56" y="392" width="10" height="16" rx="2"/>
+        <rect x="118" y="292" width="10" height="16" rx="2"/><rect x="140" y="340" width="10" height="16" rx="2"/>
+        <rect x="192" y="392" width="10" height="16" rx="2"/><rect x="226" y="432" width="10" height="16" rx="2"/>
+        <rect x="282" y="322" width="10" height="16" rx="2"/><rect x="308" y="372" width="10" height="16" rx="2"/>
+        <rect x="358" y="422" width="10" height="16" rx="2"/><rect x="396" y="462" width="10" height="16" rx="2"/>
+        <rect x="454" y="362" width="10" height="16" rx="2"/><rect x="480" y="412" width="10" height="16" rx="2"/>
+        <rect x="534" y="432" width="10" height="16" rx="2"/><rect x="562" y="472" width="10" height="16" rx="2"/>
+      </g>
+      <g fill="#FF7BB0" opacity=".5">
+        <rect x="78" y="430" width="10" height="16" rx="2"/><rect x="150" y="470" width="10" height="16" rx="2"/>
+        <rect x="250" y="500" width="10" height="16" rx="2"/><rect x="330" y="470" width="10" height="16" rx="2"/>
+        <rect x="418" y="520" width="10" height="16" rx="2"/><rect x="500" y="470" width="10" height="16" rx="2"/>
+      </g>
+      <!-- 地面反光 -->
+      <rect y="690" width="600" height="110" fill="#1B1038"/>
+      <ellipse cx="300" cy="700" rx="260" ry="26" fill="#FF6BA8" opacity=".22"/>
+      <!-- 人物剪影 -->
+      <g fill="#0C0818">
+        <circle cx="300" cy="424" r="30"/>
+        <path d="M300 456c-34 0-58 20-62 50l-8 96h140l-8-96c-4-30-28-50-62-50z"/>
+        <path d="M262 596l-14 104h30l12-96zM338 596l14 104h-30l-12-96z"/>
+      </g>
+      <path d="M266 470c-16 10-26 26-30 46M334 470c16 10 26 26 30 46" stroke="#FF9CC8" stroke-width="4" opacity=".4" fill="none" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ 顶栏 ============ -->
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="番茄大王">
+    <svg viewBox="0 0 48 48"><use href="#i-logo"/></svg>
+    <b>番茄大王</b>
+  </a>
+  <nav class="nav-links">
+    <a href="#features">功能</a>
+    <a href="#watermark">去水印</a>
+    <a href="#platforms">平台</a>
+    <a href="#privacy">隐私</a>
+  </nav>
+  <a class="btn btn-red btn-sm" href="#download">下载 APK</a>
+</header>
+
+<!-- ============ 首屏 ============ -->
+<section class="hero" id="top">
+  <div class="orb a"></div><div class="orb b"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="tag rise d1"><i></i>Android 8.0+ · v1.9.45 · 完全免费</span>
+        <h1 class="rise d2">一个链接，<br>存下<span class="gr">全网视频</span></h1>
+        <p class="lede rise d3">21 个平台、4K 原画、8 路并行分片，音视频无损合成，还能一键抹掉水印。</p>
+        <div class="hero-cta rise d4">
+          <a class="btn btn-red" href="VideoDownloader-v1.9.45.apk" download>
+            下载 APK <svg viewBox="0 0 24 24"><use href="#i-down"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#watermark">看看能做什么</a>
+        </div>
+        <div class="hero-facts rise d4">
+          <span><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>无水印</span>
+          <span><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>无广告</span>
+          <span><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>链接不外发</span>
+        </div>
+      </div>
+
+      <!-- 手绘插画：手机 + 漂浮视频卡 -->
+      <div class="hero-art rise d3">
+        <svg viewBox="0 0 620 520" role="img" aria-label="番茄大王界面示意">
+          <defs>
+            <linearGradient id="ph" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#1B1630"/><stop offset="1" stop-color="#0B0918"/></linearGradient>
+            <linearGradient id="scr" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2B1B57"/><stop offset="1" stop-color="#120C24"/></linearGradient>
+            <filter id="soft" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#101014" flood-opacity=".22"/></filter>
+          </defs>
+
+          <ellipse cx="330" cy="470" rx="230" ry="26" fill="#101014" opacity=".07"/>
+
+          <!-- 漂浮卡片：左上 -->
+          <g filter="url(#soft)">
+            <rect x="18" y="86" width="168" height="112" rx="18" fill="#fff"/>
+            <rect x="30" y="98" width="144" height="62" rx="12" fill="url(#gViolet)"/>
+            <path d="M96 122l16 10-16 10z" fill="#fff"/>
+            <rect x="30" y="170" width="82" height="8" rx="4" fill="#E7E7EE"/>
+            <rect x="30" y="184" width="52" height="8" rx="4" fill="#F0F0F5"/>
+          </g>
+          <!-- 漂浮卡片：右下 -->
+          <g filter="url(#soft)">
+            <rect x="428" y="268" width="176" height="116" rx="18" fill="#fff"/>
+            <rect x="440" y="280" width="152" height="64" rx="12" fill="url(#gTeal)"/>
+            <circle cx="516" cy="312" r="15" fill="#fff" opacity=".92"/>
+            <path d="M511 305l12 7-12 7z" fill="#12A98F"/>
+            <rect x="440" y="356" width="94" height="8" rx="4" fill="#E7E7EE"/>
+            <rect x="440" y="370" width="60" height="8" rx="4" fill="#F0F0F5"/>
+          </g>
+          <!-- 数据气泡 -->
+          <g filter="url(#soft)">
+            <rect x="452" y="108" width="132" height="56" rx="16" fill="#fff"/>
+            <circle cx="480" cy="136" r="13" fill="url(#gWarm)"/>
+            <path d="M475 136l4 4 7-8" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="502" y="124" width="66" height="9" rx="4.5" fill="#DADAE3"/>
+            <rect x="502" y="140" width="42" height="9" rx="4.5" fill="#EDEDF3"/>
+          </g>
+
+          <!-- 手机 -->
+          <g filter="url(#soft)">
+            <rect x="182" y="34" width="256" height="452" rx="40" fill="url(#ph)"/>
+            <rect x="192" y="44" width="236" height="432" rx="32" fill="url(#scr)"/>
+            <rect x="282" y="54" width="56" height="9" rx="4.5" fill="#000" opacity=".55"/>
+            <!-- 屏幕内容 -->
+            <rect x="208" y="88" width="82" height="10" rx="5" fill="#fff" opacity=".92"/>
+            <rect x="208" y="106" width="128" height="8" rx="4" fill="#fff" opacity=".34"/>
+            <rect x="208" y="132" width="204" height="46" rx="14" fill="#fff" opacity=".1"/>
+            <rect x="222" y="150" width="98" height="9" rx="4.5" fill="#fff" opacity=".55"/>
+            <rect x="208" y="192" width="204" height="128" rx="16" fill="url(#gWarm)"/>
+            <circle cx="310" cy="256" r="24" fill="#fff" opacity=".95"/>
+            <path d="M302 244l22 12-22 12z" fill="#E0362A"/>
+            <rect x="208" y="334" width="150" height="10" rx="5" fill="#fff" opacity=".8"/>
+            <rect x="208" y="352" width="96" height="9" rx="4.5" fill="#fff" opacity=".32"/>
+            <!-- 进度条 -->
+            <rect x="208" y="382" width="204" height="10" rx="5" fill="#fff" opacity=".16"/>
+            <rect x="208" y="382" width="132" height="10" rx="5" fill="url(#gWarm)"/>
+            <!-- 下载按钮 -->
+            <rect x="208" y="410" width="204" height="44" rx="22" fill="url(#gRed)"/>
+            <path d="M304 422v14m0 0l-5.5-5.5M304 436l5.5-5.5" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="322" y="428" width="52" height="8" rx="4" fill="#fff" opacity=".85"/>
+          </g>
+
+          <!-- 装饰几何 -->
+          <circle cx="96" cy="300" r="14" fill="url(#gWarm)" opacity=".9"/>
+          <rect x="542" y="212" width="22" height="22" rx="7" fill="url(#gViolet)" opacity=".85" transform="rotate(18 553 223)"/>
+          <circle cx="140" cy="404" r="8" fill="url(#gTeal)"/>
+          <path d="M60 200c18-14 40-14 58 0" stroke="#FF8A3D" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>
+        </svg>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
-<main class="bento" id="top">
-
-  <!-- 主瓦片 -->
-  <section class="tile t-hero">
-    <div class="pad">
-      <span class="eyebrow">一个链接，存下全网视频</span>
-      <h1>21 个平台的视频，<br>都能存进你手机。</h1>
-      <p class="lede">4K 原画、8 路并行分片、音视频无损合成，还能一键抹掉水印。解析全程在本地完成。</p>
-      <div class="hero-figure">
-        <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=clean%20flat%20vector%20illustration%20of%20a%20smartphone%20with%20rounded%20video%20thumbnail%20cards%20flying%20out%20of%20the%20screen%2C%20soft%20geometric%20shapes%20floating%20around%2C%20vivid%20red%20and%20warm%20orange%20palette%20with%20light%20grey%20accents%2C%20minimal%20modern%20editorial%20illustration%2C%20very%20light%20grey%20background%2C%20generous%20negative%20space%2C%20no%20text%2C%20no%20logo%2C%20no%20screen%20ui&image_size=landscape_16_9"
-             alt="" width="1600" height="1000" fetchpriority="high" decoding="async">
-      </div>
-      <div class="acts">
-        <a class="btn btn-red" href="VideoDownloader-v1.9.45.apk" download>
-          下载 APK
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
-        </a>
-        <a class="btn btn-line" href="#howto">怎么用</a>
-      </div>
+<!-- ============ 功能 ============ -->
+<section class="sec" id="features">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">核心功能</span>
+      <h2>从解析到成片，一条链路全打通</h2>
+      <p class="lead">不是半成品 —— 每个环节都替你做好了。</p>
     </div>
-  </section>
-
-  <!-- 数据瓦片 -->
-  <section class="tile t-stat ink">
-    <div class="pad">
-      <div class="v"><span data-count="21">0</span></div>
-      <div><div class="k">个平台已适配</div><div class="d">持续更新</div></div>
+    <div class="cards">
+      <div class="card rv"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-link"/></svg></div>
+        <b>粘贴即解析</b><p>复制分享链接回来，自动识别平台，短链自动展开。</p></div>
+      <div class="card rv d-1"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-hd"/></svg></div>
+        <b>画质任选</b><p>360P 到 4K 全档位可选，输出 MP4 或 WebM。</p></div>
+      <div class="card rv d-2"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-bolt"/></svg></div>
+        <b>多线程加速</b><p>8 路并行分片，最多 10 个任务同时下载。</p></div>
+      <div class="card rv d-3"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-grid"/></svg></div>
+        <b>图集批量存</b><p>图片帖一次全部保存，不用逐张点。</p></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="tile t-stat red">
-    <div class="pad">
-      <div class="v"><span data-count="4">0</span><em>K</em></div>
-      <div><div class="k">最高清晰度</div><div class="d">360P – 4K</div></div>
+<!-- ============ 去水印 ============ -->
+<section class="sec" id="watermark">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">去水印</span>
+      <h2>水印，直接抹掉</h2>
+      <p class="lead">基于样例的图像修复逐帧填补 —— 拖动滑块看对比。</p>
     </div>
-  </section>
 
-  <section class="tile t-stat">
-    <div class="pad">
-      <div class="v"><span data-count="8">0</span><em>路</em></div>
-      <div><div class="k">并行分片</div><div class="d">突破单连接限速</div></div>
-    </div>
-  </section>
-
-  <section class="tile t-stat">
-    <div class="pad">
-      <div class="v"><span data-count="100">0</span><em>%</em></div>
-      <div><div class="k">断点续传</div><div class="d">断了也能接着下</div></div>
-    </div>
-  </section>
-
-  <!-- 去水印 -->
-  <section class="tile t-wm t-wide">
-    <div class="pad">
-      <div class="head">
-        <h2>水印，直接抹掉</h2>
-        <span class="note">拖动滑块看对比 →</span>
-      </div>
-      <div class="wm-body">
+    <div class="wm-wrap">
+      <div class="rv">
         <div class="ba" id="ba" role="slider" aria-label="去水印前后对比，可左右拖动" tabindex="0">
-          <div class="ba-layer">
-            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20vertical%20video%20still%20of%20a%20young%20woman%20walking%20through%20a%20neon%20lit%20city%20street%20at%20night%2C%20vibrant%20magenta%20and%20blue%20lights%2C%20shallow%20depth%20of%20field%2C%20social%20media%20short%20video%20look%2C%20high%20quality%2C%20clean%20frame%2C%20no%20text%2C%20no%20logo%2C%20no%20watermark&image_size=portrait_16_9"
-                 alt="处理后的画面" width="1080" height="1920" loading="lazy" decoding="async">
-          </div>
-          <div class="ba-layer ba-before">
-            <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20vertical%20video%20still%20of%20a%20young%20woman%20walking%20through%20a%20neon%20lit%20city%20street%20at%20night%2C%20vibrant%20magenta%20and%20blue%20lights%2C%20shallow%20depth%20of%20field%2C%20social%20media%20short%20video%20look%2C%20high%20quality%2C%20clean%20frame%2C%20no%20text%2C%20no%20logo%2C%20no%20watermark&image_size=portrait_16_9"
-                 alt="原片画面" width="1080" height="1920" loading="lazy" decoding="async">
-            <span class="ba-wm">@UP主 · 1080P</span>
+          <div class="layer"><svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"><use href="#scene"/></svg></div>
+          <div class="layer before">
+            <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice"><use href="#scene"/></svg>
+            <span class="wm-mark"><i></i>@UP主 · 1080P</span>
           </div>
           <span class="ba-tag l">原片</span>
           <span class="ba-tag r">处理后</span>
           <div class="ba-hd"></div>
         </div>
-        <div class="wm-points">
-          <div><span class="n">01</span><div><b>图片 / 视频都支持</b><p>逐帧修复填补，保留原始画质与纹理。</p></div></div>
-          <div><span class="n">02</span><div><b>会动的水印也能跟</b><p>特征追踪 + 运动预测，逐帧锁定位置。</p></div></div>
-          <div><span class="n">03</span><div><b>音轨原样不动</b><p>只重编码画面，音频直接拷贝。</p></div></div>
+      </div>
+
+      <div class="wm-list">
+        <div class="wm-item rv"><span class="n">01</span><div><b>图片 / 视频都支持</b><p>逐帧修复填补，保留原始画质与纹理细节。</p></div></div>
+        <div class="wm-item rv d-1"><span class="n">02</span><div><b>会动的水印也能跟</b><p>特征追踪 + 运动预测，水印移动时逐帧锁定位置。</p></div></div>
+        <div class="wm-item rv d-2"><span class="n">03</span><div><b>批量处理，音轨不动</b><p>多段排队后台跑；只重编码画面，音轨原样拷贝。</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 平台 ============ -->
+<section class="sec" id="platforms">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">支持平台</span>
+      <h2>全网 21 个平台</h2>
+      <p class="lead">短视频、长视频、音频与图片社区，持续更新。</p>
+    </div>
+    <div class="tags rv d-1">
+      <span class="tag2">YouTube</span><span class="tag2">哔哩哔哩</span><span class="tag2">抖音</span>
+      <span class="tag2">TikTok</span><span class="tag2">小红书</span><span class="tag2">微博</span>
+      <span class="tag2">快手</span><span class="tag2">Instagram</span><span class="tag2">X / Twitter</span>
+      <span class="tag2">Facebook</span><span class="tag2">西瓜视频</span><span class="tag2">AcFun</span>
+      <span class="tag2">喜马拉雅</span><span class="tag2">Vimeo</span><span class="tag2">Reddit</span>
+      <span class="tag2">Pinterest</span><span class="tag2">Tumblr</span><span class="tag2">SoundCloud</span>
+      <span class="tag2">Dailymotion</span><span class="tag2">Bluesky</span><span class="tag2">Telegram</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 数字 ============ -->
+<section class="sec" id="speed">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">下载能力</span>
+      <h2>快，是有原因的</h2>
+      <p class="lead">从连接到落盘，整条链路都按「争分夺秒」设计。</p>
+    </div>
+    <div class="nums">
+      <div class="card rv"><div class="v"><span data-count="8">0</span><em>路</em></div><div class="k">并行分片</div><div class="d">突破单连接限速</div></div>
+      <div class="card rv d-1"><div class="v"><span data-count="10">0</span><em>个</em></div><div class="k">同时下载</div><div class="d">并发数可调</div></div>
+      <div class="card rv d-2"><div class="v"><span data-count="4">0</span><em>K</em></div><div class="k">最高清晰度</div><div class="d">360P – 4K</div></div>
+      <div class="card rv d-3"><div class="v"><span data-count="100">0</span><em>%</em></div><div class="k">断点续传</div><div class="d">断了也能接着下</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 隐私 ============ -->
+<section class="sec" id="privacy">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="kicker">隐私 · 本地</span>
+      <h2>解析发生在你的手机里</h2>
+      <p class="lead">不需要把链接发到任何第三方服务器，视频与合成文件全程只走本机存储。</p>
+    </div>
+    <div class="cards">
+      <div class="card rv"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-link"/></svg></div>
+        <b>1 · 粘贴链接</b><p>自动识别平台，短链自动展开。</p></div>
+      <div class="card rv d-1"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-shield"/></svg></div>
+        <b>2 · 本机解析</b><p>内置引擎在本地拿到原始直链。</p></div>
+      <div class="card rv d-2"><div class="ic"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-grid"/></svg></div>
+        <b>3 · 落盘保存</b><p>DASH 音视频无损合成后入库。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 下载 ============ -->
+<section class="sec" id="download" style="padding-top:0">
+  <div class="wrap">
+    <div class="cta rv">
+      <div class="cta-in">
+        <div>
+          <h2>现在就把链接，变成你手机里的文件。</h2>
+          <div class="meta">VideoDownloader-v1.9.45.apk ／ 约 31 MB ／ Android 8.0+</div>
+        </div>
+        <div class="acts">
+          <a class="btn btn-white" href="VideoDownloader-v1.9.45.apk" download>
+            下载番茄大王 APK <svg viewBox="0 0 24 24"><use href="#i-down"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#top" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.35)">回到顶部</a>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- 平台 -->
-  <section class="tile t-plat t-tall">
-    <div class="pad">
-      <span class="eyebrow">支持平台</span>
-      <h2 style="margin-top:12px;font-size:clamp(20px,2.6vw,26px)">21 个平台，一个入口</h2>
-      <div class="tags">
-        <span class="tag">YouTube</span><span class="tag">哔哩哔哩</span><span class="tag">抖音</span>
-        <span class="tag">TikTok</span><span class="tag">小红书</span><span class="tag">微博</span>
-        <span class="tag">快手</span><span class="tag">Instagram</span><span class="tag">X</span>
-        <span class="tag">Facebook</span><span class="tag">西瓜视频</span><span class="tag">AcFun</span>
-        <span class="tag">喜马拉雅</span><span class="tag">Vimeo</span><span class="tag">Reddit</span>
-        <span class="tag">Pinterest</span><span class="tag">Tumblr</span><span class="tag">SoundCloud</span>
-        <span class="tag">Dailymotion</span><span class="tag">Bluesky</span><span class="tag">Telegram</span>
-        <span class="tag more">持续更新…</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 本地解析 -->
-  <section class="tile t-priv t-wide t-tall" id="howto">
-    <div class="pad">
-      <span class="eyebrow" style="color:var(--lime)">隐私 · 本地</span>
-      <h2 style="margin-top:12px">解析发生在你的手机里</h2>
-      <p class="lead">不需要把链接发到任何第三方服务器，视频与合成文件全程只走本机存储。</p>
-      <div class="steps">
-        <div class="step"><div class="d">STEP 01</div><b>粘贴链接</b><p>自动识别平台，短链展开。</p></div>
-        <div class="step"><div class="d">STEP 02</div><b>本机解析</b><p>本地拿到原始直链。</p></div>
-        <div class="step"><div class="d">STEP 03</div><b>落盘保存</b><p>无损合成后入库。</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 结尾 -->
-  <section class="tile t-cta t-full">
-    <div class="pad">
-      <div>
-        <h2>把链接变成文件，只要一次粘贴。</h2>
-        <div class="meta">VideoDownloader-v1.9.45.apk ／ 约 31 MB ／ Android 8.0+</div>
-      </div>
-      <div class="acts">
-        <a class="btn" href="VideoDownloader-v1.9.45.apk" download>
-          下载番茄大王 APK
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4.5-4.5M12 15l4.5-4.5M4 20h16"/></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-</main>
+  </div>
+</section>
 
 <footer class="ft">
+  <a class="brand" href="#top" style="display:flex;align-items:center;gap:8px">
+    <svg viewBox="0 0 48 48" style="width:22px;height:22px"><use href="#i-logo"/></svg>
+    <b style="font-family:var(--sans);font-size:14px;color:var(--ink)">番茄大王</b>
+  </a>
+  <span>v1.9.45 ／ com.videodownloader.app</span>
   <span>© 2026 番茄大王</span>
-  <span>com.videodownloader.app</span>
 </footer>
 
 <div class="dock" id="dock">
@@ -390,6 +596,7 @@ p{margin:0}
 <script>
 (function () {
   'use strict';
+  var nav = document.getElementById('nav');
   var dock = document.getElementById('dock');
   var ticking = false;
 
@@ -398,8 +605,9 @@ p{margin:0}
     ticking = true;
     requestAnimationFrame(function () {
       var y = window.scrollY || window.pageYOffset || 0;
+      if (nav) nav.classList.toggle('solid', y > 10);
       if (dock) {
-        var show = y > 380;
+        var show = y > 420;
         dock.classList.toggle('show', show);
         document.body.classList.toggle('docked', show);
       }
@@ -408,32 +616,26 @@ p{margin:0}
   }
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
 
-  var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('.rv'));
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e, i) {
-        if (e.isIntersecting) {
-          var el = e.target;
-          el.style.transitionDelay = Math.min(i * 45, 220) + 'ms';
-          el.classList.add('in');
-          io.unobserve(el);
-        }
-      });
-    }, { threshold: 0.06, rootMargin: '0px 0px -3% 0px' });
-    tiles.forEach(function (t) { io.observe(t); });
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+    items.forEach(function (el) { io.observe(el); });
     setTimeout(function () {
-      tiles.forEach(function (t) {
-        if (!t.classList.contains('in') && t.getBoundingClientRect().top < window.innerHeight) t.classList.add('in');
+      items.forEach(function (el) {
+        if (!el.classList.contains('in') && el.getBoundingClientRect().top < window.innerHeight) el.classList.add('in');
       });
-    }, 1100);
+    }, 1200);
   } else {
-    tiles.forEach(function (t) { t.classList.add('in'); });
+    items.forEach(function (el) { el.classList.add('in'); });
   }
 
   var nums = document.querySelectorAll('[data-count]');
   function count(el) {
-    var to = parseInt(el.getAttribute('data-count'), 10) || 0, dur = 900, t0 = performance.now();
+    var to = parseInt(el.getAttribute('data-count'), 10) || 0, dur = 950, t0 = performance.now();
     (function tick(now) {
       var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.round(to * e);
